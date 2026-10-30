@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { CardData } from '@/types/card';
+import PopBadgeCard from './templates/PopBadgeCard';
 import DriverLicenseCard from './templates/DriverLicenseCard';
 import CitizenIdCard from './templates/CitizenIdCard';
 import WorkBadgeCard from './templates/WorkBadgeCard';
@@ -14,6 +15,8 @@ interface CardRendererProps {
 
 export default function CardRenderer({ card, isBack = false }: CardRendererProps) {
   switch (card.template) {
+    case 'pop-badge':
+      return <PopBadgeCard card={card} isBack={isBack} />;
     case 'driver-license':
       return <DriverLicenseCard card={card} isBack={isBack} />;
     case 'citizen-id':
@@ -23,7 +26,6 @@ export default function CardRenderer({ card, isBack = false }: CardRendererProps
     case 'event-pass':
       return <EventPassCard card={card} isBack={isBack} />;
     default:
-      return <DriverLicenseCard card={card} isBack={isBack} />;
+      return <PopBadgeCard card={card} isBack={isBack} />;
   }
 }
-

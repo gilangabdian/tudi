@@ -17,7 +17,7 @@ export default function SignaturePad({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [mode, setMode] = useState<'draw' | 'type'>(signatureDataUrl ? 'draw' : 'type');
-  const [typedName, setTypedName] = useState(signatureText || 'Grizzly Bear');
+  const [typedName, setTypedName] = useState(signatureText || 'Kase Y.');
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -35,7 +35,9 @@ export default function SignaturePad({
     }
   }, [signatureDataUrl]);
 
-  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+  const startDrawing = (
+    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
+  ) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -50,11 +52,13 @@ export default function SignaturePad({
     ctx.lineWidth = 2.5;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    ctx.strokeStyle = '#1A1A1A';
+    ctx.strokeStyle = '#1E1B2E';
     setIsDrawing(true);
   };
 
-  const draw = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+  const draw = (
+    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
+  ) => {
     if (!isDrawing) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -98,24 +102,24 @@ export default function SignaturePad({
         <button
           type="button"
           onClick={() => setMode('draw')}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg text-sm font-semibold border-2 transition ${
+          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-bold border-2 transition ${
             mode === 'draw'
               ? 'bg-[#6A5495] text-white border-[#261F36] shadow-[2px_2px_0px_#261F36]'
               : 'bg-white text-gray-700 border-gray-300 hover:border-[#6A5495]'
           }`}
         >
-          <PenTool size={15} /> Gambar Manual
+          <PenTool size={14} /> Draw by Hand
         </button>
         <button
           type="button"
           onClick={() => setMode('type')}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg text-sm font-semibold border-2 transition ${
+          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-bold border-2 transition ${
             mode === 'type'
               ? 'bg-[#6A5495] text-white border-[#261F36] shadow-[2px_2px_0px_#261F36]'
               : 'bg-white text-gray-700 border-gray-300 hover:border-[#6A5495]'
           }`}
         >
-          <Type size={15} /> Tulis Font Doodle
+          <Type size={14} /> Type Cursive Font
         </button>
       </div>
 
@@ -136,7 +140,7 @@ export default function SignaturePad({
               className="w-full h-[100px] cursor-crosshair touch-none bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:12px_12px]"
             />
             <div className="absolute bottom-1 right-2 pointer-events-none text-[11px] font-['Patrick_Hand'] text-gray-400">
-              coret tanda tangan di sini ✍️
+              draw signature here ✍️
             </div>
           </div>
           <button
@@ -144,7 +148,7 @@ export default function SignaturePad({
             onClick={clearCanvas}
             className="flex items-center gap-1 text-xs text-red-600 hover:text-red-700 font-semibold px-2 py-1 rounded bg-red-50 border border-red-200"
           >
-            <Eraser size={13} /> Bersihkan Tanda Tangan
+            <Eraser size={13} /> Clear Canvas
           </button>
         </div>
       ) : (
@@ -153,13 +157,13 @@ export default function SignaturePad({
             type="text"
             value={typedName}
             onChange={(e) => handleTypeChange(e.target.value)}
-            placeholder="Tulis nama untuk tanda tangan..."
-            className="w-full px-3 py-2 border-2 border-[#261F36] rounded-xl text-sm font-['Patrick_Hand'] text-lg focus:outline-none focus:ring-2 focus:ring-[#6A5495]"
+            placeholder="Type name for signature..."
+            className="w-full px-3 py-2 border-2 border-[#261F36] rounded-xl text-xs font-['Patrick_Hand'] text-lg focus:outline-none focus:ring-2 focus:ring-[#6A5495]"
           />
           <div className="p-3 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl text-center">
-            <span className="text-xs text-gray-500 block mb-1">Preview Tanda Tangan:</span>
+            <span className="text-xs text-gray-500 block mb-1">Live Signature Preview:</span>
             <span className="font-['Caveat'] text-2xl text-[#261F36] font-bold">
-              {typedName || 'Tanda Tangan Kamu'}
+              {typedName || 'Your Signature'}
             </span>
           </div>
         </div>
@@ -167,4 +171,3 @@ export default function SignaturePad({
     </div>
   );
 }
-

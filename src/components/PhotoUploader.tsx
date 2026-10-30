@@ -26,7 +26,7 @@ export default function PhotoUploader({
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      alert('Harap pilih file gambar (JPG, PNG, WebP)');
+      alert('Please select an image file (JPG, PNG, WebP)');
       return;
     }
 
@@ -47,7 +47,7 @@ export default function PhotoUploader({
       {/* Preset 2D Avatars */}
       <div>
         <label className="text-xs font-bold text-gray-700 flex items-center gap-1.5 mb-2">
-          <Sparkles size={14} className="text-[#6A5495]" /> Karakter 2D Kartun Pilihan:
+          <Sparkles size={14} className="text-[#6A5495]" /> 2D Character Avatars:
         </label>
         <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
           {PRESET_AVATARS.map((avatar) => {
@@ -84,7 +84,7 @@ export default function PhotoUploader({
       {/* Custom Photo Upload */}
       <div>
         <label className="text-xs font-bold text-gray-700 flex items-center gap-1.5 mb-2">
-          <Upload size={14} className="text-[#6A5495]" /> Atau Upload Foto Kamu Sendiri:
+          <Upload size={14} className="text-[#6A5495]" /> Or Upload Your Own Photo:
         </label>
         <div className="flex gap-2">
           <input
@@ -99,14 +99,14 @@ export default function PhotoUploader({
             onClick={() => fileInputRef.current?.click()}
             className="flex-1 flex items-center justify-center gap-2 py-2 px-3 border-2 border-dashed border-[#6A5495] rounded-xl bg-[#6A5495]/5 hover:bg-[#6A5495]/10 text-xs font-bold text-[#6A5495] transition"
           >
-            <ImageIcon size={15} /> Pilih Foto dari Perangkat
+            <ImageIcon size={15} /> Choose Photo from Device
           </button>
           {photoUrl && (
             <button
               type="button"
-              onClick={() => onPhotoChange('', 'bear-grizzly')}
+              onClick={() => onPhotoChange('', 'intern-kase')}
               className="p-2 text-red-500 border-2 border-red-200 hover:bg-red-50 rounded-xl transition"
-              title="Kembali ke avatar kartun"
+              title="Reset to cartoon avatar"
             >
               <Trash2 size={16} />
             </button>
@@ -114,17 +114,17 @@ export default function PhotoUploader({
         </div>
       </div>
 
-      {/* Foto Filter 2D Style */}
+      {/* Photo Filter 2D Style */}
       <div>
         <label className="text-xs font-bold text-gray-700 block mb-1.5">
-          Gaya Frame / Filter Foto:
+          2D Photo Style & Filter:
         </label>
         <div className="grid grid-cols-4 gap-1.5">
           {(
             [
               { id: 'doodle-border', label: '2D Outline' },
               { id: 'comic', label: 'Comic Pop' },
-              { id: 'sketch', label: 'Sketch B&W' },
+              { id: 'sketch', label: 'B&W Sketch' },
               { id: 'none', label: 'Normal' },
             ] as const
           ).map((item) => (
@@ -146,4 +146,3 @@ export default function PhotoUploader({
     </div>
   );
 }
-

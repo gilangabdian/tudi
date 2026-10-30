@@ -10,7 +10,8 @@ interface EventPassCardProps {
 }
 
 export default function EventPassCard({ card, isBack = false }: EventPassCardProps) {
-  const currentAvatar = PRESET_AVATARS.find((a) => a.id === card.photoPresetId) || PRESET_AVATARS[0];
+  const currentAvatar =
+    PRESET_AVATARS.find((a) => a.id === card.photoPresetId) || PRESET_AVATARS[0];
 
   return (
     <div
@@ -67,9 +68,16 @@ export default function EventPassCard({ card, isBack = false }: EventPassCardPro
               }`}
             >
               {card.photoUrl ? (
-                <img src={card.photoUrl} alt="Event Attendee" className="w-full h-full object-cover" />
+                <img
+                  src={card.photoUrl}
+                  alt="Event Attendee"
+                  className="w-full h-full object-cover"
+                />
               ) : (
-                <div className="w-full h-full" dangerouslySetInnerHTML={{ __html: currentAvatar.svg }} />
+                <div
+                  className="w-full h-full"
+                  dangerouslySetInnerHTML={{ __html: currentAvatar.svg }}
+                />
               )}
             </div>
           </div>
@@ -104,15 +112,18 @@ export default function EventPassCard({ card, isBack = false }: EventPassCardPro
         /* BACK SIDE */
         <div className="relative z-10 flex flex-col h-full justify-between pt-3 text-center">
           <div className="border-b-2 border-[#261F36] pb-2">
-            <h2 className="text-lg font-black uppercase font-['Fredoka']" style={{ color: card.themeColor }}>
+            <h2
+              className="text-lg font-black uppercase font-['Fredoka']"
+              style={{ color: card.themeColor }}
+            >
               EVENT GUIDELINES
             </h2>
           </div>
 
           <div className="my-auto space-y-2 text-xs text-gray-700 px-2 text-left">
-            <p>• Pass ini memberikan akses masuk ke semua lounge 2D.</p>
-            <p>• Tunjukkan kartu ini kepada penjaga pintu kartun.</p>
-            <p>• Termasuk free refill snack & teh boba selama acara.</p>
+            <p>• This pass grants full admission to all 2D lounges.</p>
+            <p>• Present this badge to the cartoon gatekeeper at entry.</p>
+            <p>• Includes complimentary snack refills and boba drinks.</p>
           </div>
 
           <div className="border-t-2 border-[#261F36] pt-2 text-center text-xs font-['Space_Mono']">
@@ -123,4 +134,3 @@ export default function EventPassCard({ card, isBack = false }: EventPassCardPro
     </div>
   );
 }
-
