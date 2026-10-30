@@ -1,1 +1,1 @@
-It's tudi, make namecard 2d design.
+It's tudi, cute namecard 2d design.
