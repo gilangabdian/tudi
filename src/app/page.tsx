@@ -1,107 +1,48 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useSyncExternalStore } from 'react';
 import Navbar from '@/components/Navbar';
 import EditorSidebar from '@/components/EditorSidebar';
 import CardRenderer from '@/components/CardRenderer';
 import LanyardMockup from '@/components/LanyardMockup';
 import SlotRail from '@/components/SlotRail';
 import { CardData } from '@/types/card';
-import { DEFAULT_CARD_DATA, FUNNY_RANDOM_PROFILES } from '@/lib/constants';
+import { FUNNY_RANDOM_PROFILES } from '@/lib/constants';
+import {
+  subscribe,
+  getSnapshot,
+  getServerSnapshot,
+  updateCard,
+  selectSlot,
+} from '@/lib/cardStore';
 import { toPng } from 'html-to-image';
 import { RotateCw, Scissors } from 'lucide-react';
 
-const STORAGE_SLOTS_KEY = 'tudi_10_slots_v3';
-const STORAGE_ACTIVE_SLOT_KEY = 'tudi_active_slot_index_v3';
-
 export default function Home() {
-  const [currentSlotIndex, setCurrentSlotIndex] = useState<number>(0);
-  const [slotsData, setSlotsData] = useState<Record<number, CardData | null>>({
-    0: DEFAULT_CARD_DATA,
-  });
-  const [card, setCard] = useState<CardData>(DEFAULT_CARD_DATA);
+  const { currentSlotIndex, slotsData, card } = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot
+  );
   const [isBack, setIsBack] = useState(false);
   const [isLanyardMode, setIsLanyardMode] = useState(true);
   const [isDownloading, setIsDownloading] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
 
   const cardRef = useRef<HTMLDivElement | null>(null);
   const exportCardRef = useRef<HTMLDivElement | null>(null);
 
-  // Load slots and active index on mount
-  useEffect(() => {
-    setIsMounted(true);
-    try {
-      const storedSlots = localStorage.getItem(STORAGE_SLOTS_KEY);
-      const storedIndex = localStorage.getItem(STORAGE_ACTIVE_SLOT_KEY);
-      let parsedSlots: Record<number, CardData | null> = { 0: DEFAULT_CARD_DATA };
-      let initialIndex = 0;
-
-      if (storedSlots) {
-        parsedSlots = JSON.parse(storedSlots);
-      }
-      if (storedIndex) {
-        initialIndex = parseInt(storedIndex, 10);
-      }
-
-      setSlotsData(parsedSlots);
-      setCurrentSlotIndex(initialIndex);
-
-      if (parsedSlots[initialIndex]) {
-        setCard(parsedSlots[initialIndex]!);
-      }
-    } catch (e) {
-      console.warn('LocalStorage load error:', e);
-    }
-  }, []);
-
-  // Auto-sync current card changes to its active slot in LocalStorage
-  useEffect(() => {
-    if (!isMounted) return;
-    try {
-      const updatedSlots = {
-        ...slotsData,
-        [currentSlotIndex]: card,
-      };
-      setSlotsData(updatedSlots);
-      localStorage.setItem(STORAGE_SLOTS_KEY, JSON.stringify(updatedSlots));
-      localStorage.setItem(STORAGE_ACTIVE_SLOT_KEY, currentSlotIndex.toString());
-    } catch (e) {
-      console.warn('LocalStorage save error:', e);
-    }
-  }, [card, isMounted]);
-
   const handleCardChange = (updated: Partial<CardData>) => {
-    setCard((prev) => ({
-      ...prev,
-      ...updated,
-      updatedAt: Date.now(),
-    }));
+    updateCard(updated);
   };
 
   const handleSelectSlot = (index: number) => {
-    if (index === currentSlotIndex) return;
-
-    const existing = slotsData[index];
-    if (existing) {
-      setCard(existing);
-    } else {
-      const newCard: CardData = {
-        ...DEFAULT_CARD_DATA,
-        id: `slot-${index + 1}-${Date.now()}`,
-        firstName: `CARD #${index + 1}`,
-        lastName: '',
-      };
-      setCard(newCard);
-    }
-    setCurrentSlotIndex(index);
-    localStorage.setItem(STORAGE_ACTIVE_SLOT_KEY, index.toString());
+    selectSlot(index);
   };
 
   const handleRandomize = () => {
     const randomProfile =
       FUNNY_RANDOM_PROFILES[Math.floor(Math.random() * FUNNY_RANDOM_PROFILES.length)];
-    handleCardChange({
+    updateCard({
       ...randomProfile,
       name: `${randomProfile.firstName || ''} ${randomProfile.lastName || ''}`.trim(),
     });
@@ -168,8 +109,8 @@ export default function Home() {
           />
         </div>
 
-        {/* Right Column: Clean Preview Stage (No heavy card wrapping, unboxed) */}
-        <div className="lg:col-span-7 xl:col-span-8 flex flex-col items-center justify-center py-2">
+        {/* Right Column: Clean Preview Stage (Sticky so it stays visible while scrolling sidebar) */}
+        <div className="lg:col-span-7 xl:col-span-8 lg:sticky lg:top-16 lg:self-start flex flex-col items-center justify-center py-2">
           {/* Card Target Element (Visible on screen) */}
           <div className="py-2">
             <div

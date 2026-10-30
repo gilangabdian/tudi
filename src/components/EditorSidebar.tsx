@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { CardData, TemplateType } from '@/types/card';
-import { COLOR_PRESETS, HOLDER_PRESETS, BG_PRESETS, BRAND_COLOR } from '@/lib/constants';
+import { COLOR_PRESETS, HOLDER_PRESETS, BG_PRESETS } from '@/lib/constants';
 import PhotoUploader from './PhotoUploader';
 import SignaturePad from './SignaturePad';
 import {
@@ -119,7 +119,7 @@ export default function EditorSidebar({ card, onChange, isLanyardMode = false }:
                     key={tpl.id}
                     type="button"
                     onClick={() => {
-                      let updates: Partial<CardData> = { template: tpl.id };
+                      const updates: Partial<CardData> = { template: tpl.id };
                       if (tpl.id === 'pop-badge') {
                         updates.title = 'TII';
                         updates.subtitle = 'FEAR DEPT.';
@@ -514,12 +514,12 @@ export default function EditorSidebar({ card, onChange, isLanyardMode = false }:
                 2D Stamps & Badges:
               </label>
               <div className="flex flex-wrap gap-2">
-                {[
+                {([
                   { id: 'verified', label: '★ Verified Stamp' },
                   { id: 'approved', label: '✓ Approved Seal' },
                   { id: 'pawprint', label: '🐾 Paw Watermark' },
-                ].map((stamp) => {
-                  const active = card.stamps?.includes(stamp.id as any);
+                ] as const).map((stamp) => {
+                  const active = card.stamps?.includes(stamp.id);
                   return (
                     <button
                       key={stamp.id}
@@ -528,7 +528,7 @@ export default function EditorSidebar({ card, onChange, isLanyardMode = false }:
                         const current = card.stamps || [];
                         const next = active
                           ? current.filter((s) => s !== stamp.id)
-                          : [...current, stamp.id as any];
+                          : [...current, stamp.id];
                         onChange({ stamps: next });
                       }}
                       className={`px-2.5 py-1 rounded-lg text-xs font-bold border transition ${
