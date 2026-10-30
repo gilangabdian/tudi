@@ -3,10 +3,10 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #261f36;
+  --foreground: #2d3748;
   --color-brand: #6a5495;
   --color-brand-light: #f4f0fa;
-  --color-brand-dark: #261f36;
+  --color-brand-dark: #2d3748;
 }
 
 @theme {
@@ -17,37 +17,30 @@
   --font-space: 'Space Mono', monospace;
   --color-brand: #6a5495;
   --color-brand-light: #f4f0fa;
-  --color-brand-dark: #261f36;
+  --color-brand-dark: #2d3748;
   --color-brand-hover: #56427d;
 }
 
 body {
   background-color: #ffffff;
-  color: #261f36;
+  color: #2d3748;
   font-family: var(--font-fredoka), system-ui, -apple-system, sans-serif;
 }
 
-/* Friendly Soft 2D Buttons (No harsh offset shadows) */
+/* Friendly Clean Buttons */
 .friendly-btn {
-  border: 2px solid #261f36;
+  border: 1.5px solid #cbd5e1;
   border-radius: 12px;
   font-weight: 700;
   transition: all 0.15s ease-in-out;
 }
 
 .friendly-btn:hover:not(:disabled) {
-  transform: translateY(-1px);
   filter: brightness(0.97);
 }
 
 .friendly-btn:active:not(:disabled) {
   transform: translateY(1px);
-}
-
-/* Friendly 2D Panels */
-.friendly-card {
-  border: 2px solid #261f36;
-  border-radius: 20px;
 }
 
 /* Card Surface Patterns */
@@ -88,38 +81,41 @@ body {
   border-radius: 3px;
 }
 
-/* Precise A4 Dual-Sided Print CSS */
+/* Precise A4 Single-Page Print CSS (Strictly 1 Page Only) */
 @media print {
   @page {
     size: A4 portrait;
-    margin: 15mm;
+    margin: 8mm;
   }
 
-  /* Hide everything else on the screen */
-  body * {
-    visibility: hidden;
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    background: white !important;
   }
 
-  /* Exclude lanyard completely */
-  .lanyard-mockup,
-  .lanyard-element {
+  /* Completely remove on-screen elements from print flow to prevent extra page */
+  header,
+  footer,
+  aside,
+  main {
     display: none !important;
   }
 
-  /* Show only the dual-sided printable sheet */
-  #printable-dual-card-sheet,
-  #printable-dual-card-sheet * {
-    visibility: visible;
-  }
-
+  /* Only display the single A4 sheet */
   #printable-dual-card-sheet {
     display: block !important;
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    background: white !important;
+    position: relative !important;
+    width: 100% !important;
+    max-width: 190mm !important;
+    margin: 0 auto !important;
+    padding: 5mm 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
   }
 }

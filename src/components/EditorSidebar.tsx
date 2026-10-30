@@ -9,17 +9,20 @@ import {
   CreditCard,
   User,
   Palette,
-  Sparkles,
+  ArrowRight,
+  ArrowLeft,
+  Check,
 } from 'lucide-react';
 
 interface EditorSidebarProps {
   card: CardData;
   onChange: (updated: Partial<CardData>) => void;
+  isLanyardMode?: boolean;
 }
 
 type GroupTab = 'template' | 'identity' | 'creative';
 
-export default function EditorSidebar({ card, onChange }: EditorSidebarProps) {
+export default function EditorSidebar({ card, onChange, isLanyardMode = false }: EditorSidebarProps) {
   const [activeGroup, setActiveGroup] = useState<GroupTab>('identity');
 
   const templates: { id: TemplateType; title: string; desc: string; icon: string }[] = [
@@ -56,16 +59,16 @@ export default function EditorSidebar({ card, onChange }: EditorSidebarProps) {
   ];
 
   return (
-    <div className="bg-white border-2 border-[#261F36]/80 rounded-2xl overflow-hidden flex flex-col h-full max-h-[85vh]">
-      {/* 3 Streamlined Main Groups */}
-      <div className="flex border-b-2 border-[#261F36]/20 bg-[#F4F0FA] p-1.5 gap-1.5 select-none">
+    <div className="flex flex-col h-full space-y-4">
+      {/* 3 Streamlined Step Tabs (No heavy card wrapping) */}
+      <div className="flex border-b border-gray-200 pb-2 gap-2 select-none">
         <button
           type="button"
           onClick={() => setActiveGroup('template')}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl text-xs font-bold transition ${
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs font-bold transition ${
             activeGroup === 'template'
               ? 'bg-[#6A5495] text-white shadow-xs'
-              : 'text-[#261F36] hover:bg-white/70'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
         >
           <CreditCard size={14} />
@@ -75,10 +78,10 @@ export default function EditorSidebar({ card, onChange }: EditorSidebarProps) {
         <button
           type="button"
           onClick={() => setActiveGroup('identity')}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl text-xs font-bold transition ${
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs font-bold transition ${
             activeGroup === 'identity'
               ? 'bg-[#6A5495] text-white shadow-xs'
-              : 'text-[#261F36] hover:bg-white/70'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
         >
           <User size={14} />
@@ -88,27 +91,25 @@ export default function EditorSidebar({ card, onChange }: EditorSidebarProps) {
         <button
           type="button"
           onClick={() => setActiveGroup('creative')}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl text-xs font-bold transition ${
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs font-bold transition ${
             activeGroup === 'creative'
               ? 'bg-[#6A5495] text-white shadow-xs'
-              : 'text-[#261F36] hover:bg-white/70'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
         >
           <Palette size={14} />
-          <span>3. Avatar & Art</span>
+          <span>3. Avatar & Signature</span>
         </button>
       </div>
 
-      {/* Group Content Container */}
-      <div className="p-4 overflow-y-auto space-y-4 flex-1">
+      {/* Step Content Container (Clean, flat, seamless) */}
+      <div className="space-y-4">
         {/* GROUP 1: TEMPLATE SELECTOR */}
         {activeGroup === 'template' && (
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                Select Card Type:
-              </span>
-            </div>
+          <div className="space-y-3.5">
+            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block">
+              Choose Card Template:
+            </span>
 
             <div className="grid grid-cols-1 gap-2">
               {templates.map((tpl) => {
@@ -154,11 +155,11 @@ export default function EditorSidebar({ card, onChange }: EditorSidebarProps) {
                     }}
                     className={`flex items-start gap-3 p-3 rounded-xl border-2 text-left transition ${
                       isSelected
-                        ? 'border-[#6A5495] bg-[#6A5495]/10'
+                        ? 'border-[#6A5495] bg-[#6A5495]/5'
                         : 'border-gray-200 hover:border-gray-400 bg-white'
                     }`}
                   >
-                    <span className="text-2xl p-2 rounded-xl bg-white border border-gray-200">
+                    <span className="text-2xl p-2 rounded-xl bg-gray-50 border border-gray-200">
                       {tpl.icon}
                     </span>
                     <div className="flex-1">
@@ -167,8 +168,8 @@ export default function EditorSidebar({ card, onChange }: EditorSidebarProps) {
                           {tpl.title}
                         </span>
                         {isSelected && (
-                          <span className="bg-[#6A5495] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                            Active
+                          <span className="bg-[#6A5495] text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                            <Check size={10} /> Active
                           </span>
                         )}
                       </div>
@@ -178,6 +179,16 @@ export default function EditorSidebar({ card, onChange }: EditorSidebarProps) {
                 );
               })}
             </div>
+
+            {/* Clear Next Step Button */}
+            <button
+              type="button"
+              onClick={() => setActiveGroup('identity')}
+              className="w-full mt-3 py-2.5 px-4 bg-[#6A5495] text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-[#56427D] transition shadow-xs"
+            >
+              <span>Continue to Info & Colors</span>
+              <ArrowRight size={14} />
+            </button>
           </div>
         )}
 
@@ -329,57 +340,22 @@ export default function EditorSidebar({ card, onChange }: EditorSidebarProps) {
                   </div>
                 </div>
 
-                {/* Driver License specifics */}
-                {card.template === 'driver-license' && (
-                  <>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div>
-                        <label className="text-xs font-bold text-gray-700 block mb-1">DOB</label>
-                        <input
-                          type="text"
-                          value={card.birthDate}
-                          onChange={(e) => onChange({ birthDate: e.target.value })}
-                          className="w-full px-2.5 py-1.5 border-2 border-gray-300 rounded-xl text-xs font-bold focus:outline-none focus:border-[#6A5495]"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-xs font-bold text-gray-700 block mb-1">Gender</label>
-                        <input
-                          type="text"
-                          value={card.gender}
-                          onChange={(e) => onChange({ gender: e.target.value })}
-                          className="w-full px-2.5 py-1.5 border-2 border-gray-300 rounded-xl text-xs font-bold focus:outline-none focus:border-[#6A5495]"
-                        />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div>
-                        <label className="text-xs font-bold text-gray-700 block mb-1">Height</label>
-                        <input
-                          type="text"
-                          value={card.height}
-                          onChange={(e) => onChange({ height: e.target.value })}
-                          className="w-full px-2.5 py-1.5 border-2 border-gray-300 rounded-xl text-xs font-bold focus:outline-none focus:border-[#6A5495]"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-xs font-bold text-gray-700 block mb-1">Weight</label>
-                        <input
-                          type="text"
-                          value={card.weight}
-                          onChange={(e) => onChange({ weight: e.target.value })}
-                          className="w-full px-2.5 py-1.5 border-2 border-gray-300 rounded-xl text-xs font-bold focus:outline-none focus:border-[#6A5495]"
-                        />
-                      </div>
-                    </div>
-                  </>
-                )}
+                <div>
+                  <label className="text-xs font-bold text-gray-700 block mb-1">
+                    ID / Number
+                  </label>
+                  <input
+                    type="text"
+                    value={card.idNumber}
+                    onChange={(e) => onChange({ idNumber: e.target.value })}
+                    className="w-full px-2.5 py-1.5 border-2 border-gray-300 rounded-xl text-xs font-['Space_Mono'] font-bold focus:outline-none focus:border-[#6A5495]"
+                  />
+                </div>
 
-                {/* Citizen ID specifics */}
-                {card.template === 'citizen-id' && (
+                {card.template === 'driver-license' && (
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="text-xs font-bold text-gray-700 block mb-1">Birth Date</label>
+                      <label className="text-xs font-bold text-gray-700 block mb-1">DOB</label>
                       <input
                         type="text"
                         value={card.birthDate}
@@ -388,11 +364,11 @@ export default function EditorSidebar({ card, onChange }: EditorSidebarProps) {
                       />
                     </div>
                     <div>
-                      <label className="text-xs font-bold text-gray-700 block mb-1">Occupation</label>
+                      <label className="text-xs font-bold text-gray-700 block mb-1">Gender</label>
                       <input
                         type="text"
-                        value={card.jobTitle}
-                        onChange={(e) => onChange({ jobTitle: e.target.value })}
+                        value={card.gender}
+                        onChange={(e) => onChange({ gender: e.target.value })}
                         className="w-full px-2.5 py-1.5 border-2 border-gray-300 rounded-xl text-xs font-bold focus:outline-none focus:border-[#6A5495]"
                       />
                     </div>
@@ -401,11 +377,11 @@ export default function EditorSidebar({ card, onChange }: EditorSidebarProps) {
               </div>
             )}
 
-            {/* Colors & Palette Sub-section */}
+            {/* Colors Section */}
             <div className="border-t border-gray-200 pt-3 space-y-3">
               <div>
                 <label className="text-xs font-bold text-gray-700 block mb-1.5">
-                  Card Accent Color:
+                  Card Theme Color:
                 </label>
                 <div className="flex flex-wrap gap-1.5">
                   {COLOR_PRESETS.map((color) => (
@@ -431,7 +407,7 @@ export default function EditorSidebar({ card, onChange }: EditorSidebarProps) {
 
               <div>
                 <label className="text-xs font-bold text-gray-700 block mb-1.5">
-                  Card Paper Tint:
+                  Card Background Paper Tint:
                 </label>
                 <div className="flex flex-wrap gap-1.5">
                   {BG_PRESETS.map((bg) => (
@@ -455,14 +431,33 @@ export default function EditorSidebar({ card, onChange }: EditorSidebarProps) {
                 </div>
               </div>
             </div>
+
+            {/* Step Navigation Buttons */}
+            <div className="flex gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setActiveGroup('template')}
+                className="py-2 px-3 border border-gray-300 rounded-xl font-bold text-xs text-gray-600 hover:bg-gray-100 flex items-center gap-1"
+              >
+                <ArrowLeft size={13} /> Back
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveGroup('creative')}
+                className="flex-1 py-2 px-4 bg-[#6A5495] text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-[#56427D] transition shadow-xs"
+              >
+                <span>Next: Avatar & Signature</span>
+                <ArrowRight size={14} />
+              </button>
+            </div>
           </div>
         )}
 
-        {/* GROUP 3: CREATIVE (AVATAR, SIGNATURE & ACCESSORIES) */}
+        {/* GROUP 3: CREATIVE (AVATAR, SIGNATURE & ART) */}
         {activeGroup === 'creative' && (
           <div className="space-y-4">
             {/* Avatar & Photo Picker */}
-            <div className="border-b border-gray-200 pb-4">
+            <div className="border-b border-gray-200 pb-3">
               <PhotoUploader
                 photoUrl={card.photoUrl}
                 photoPresetId={card.photoPresetId}
@@ -475,7 +470,7 @@ export default function EditorSidebar({ card, onChange }: EditorSidebarProps) {
             </div>
 
             {/* Signature Canvas */}
-            <div className="border-b border-gray-200 pb-4">
+            <div className="border-b border-gray-200 pb-3">
               <label className="text-xs font-bold text-gray-700 block mb-2">
                 Handwritten Signature:
               </label>
@@ -486,90 +481,128 @@ export default function EditorSidebar({ card, onChange }: EditorSidebarProps) {
               />
             </div>
 
-            {/* Badge Holder & Lanyard Frame Settings */}
-            <div className="space-y-3">
-              <div>
-                <label className="text-xs font-bold text-gray-700 block mb-1.5">
-                  Holder Frame Color:
-                </label>
-                <div className="flex flex-wrap gap-1.5">
-                  {HOLDER_PRESETS.map((h) => (
-                    <button
-                      key={h.hex}
-                      type="button"
-                      onClick={() => onChange({ holderColor: h.hex })}
-                      className={`flex items-center gap-1.5 py-1 px-2 rounded-lg border text-[11px] font-bold transition ${
-                        card.holderColor === h.hex
-                          ? 'border-[#6A5495] bg-[#6A5495]/10 text-[#6A5495]'
-                          : 'border-gray-200 text-gray-700 hover:border-gray-400'
-                      }`}
-                    >
-                      <span
-                        className="w-3.5 h-3.5 rounded-full border border-black/20"
-                        style={{ backgroundColor: h.hex }}
-                      />
-                      <span>{h.name.split(' ')[0]}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Edge Doodles Toggle */}
-              <div className="flex items-center justify-between py-1">
-                <span className="text-xs font-bold text-gray-700">Daisy Flower Doodles</span>
-                <button
-                  type="button"
-                  onClick={() =>
-                    onChange({
-                      holderPattern: card.holderPattern === 'flowers' ? 'clean' : 'flowers',
-                    })
-                  }
-                  className={`px-3 py-1 rounded-lg text-xs font-bold transition border ${
-                    card.holderPattern === 'flowers'
-                      ? 'bg-[#6A5495] text-white border-[#6A5495]'
-                      : 'bg-gray-100 text-gray-700 border-gray-300'
-                  }`}
-                >
-                  {card.holderPattern === 'flowers' ? '🌼 Active' : 'Clean'}
-                </button>
-              </div>
-
-              {/* Pop Badge Stickers Toggle */}
-              <div>
-                <label className="text-xs font-bold text-gray-700 block mb-1">
-                  Overlapping Badges:
-                </label>
-                <div className="flex flex-wrap gap-1.5">
-                  {[
-                    { id: 'dnf', label: '🚨 DNF Tag' },
-                    { id: 'no-headaches', label: '💊 No Headaches' },
-                    { id: 'voxel-pin', label: '🧊 Mascot Pin' },
-                  ].map((st) => {
-                    const hasSticker = card.stickers?.includes(st.id);
-                    return (
-                      <button
-                        key={st.id}
-                        type="button"
-                        onClick={() => {
-                          const current = card.stickers || [];
-                          const next = hasSticker
-                            ? current.filter((s) => s !== st.id)
-                            : [...current, st.id];
-                          onChange({ stickers: next });
-                        }}
-                        className={`px-2.5 py-1 rounded-lg border text-xs font-bold transition ${
-                          hasSticker
-                            ? 'bg-[#6A5495] text-white border-[#6A5495]'
-                            : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
-                        }`}
-                      >
-                        {st.label}
-                      </button>
-                    );
-                  })}
-                </div>
+            {/* Colors also directly accessible here so changing color always works! */}
+            <div className="border-b border-gray-200 pb-3 space-y-2">
+              <label className="text-xs font-bold text-gray-700 block">
+                Card Accent Color:
+              </label>
+              <div className="flex flex-wrap gap-1.5">
+                {COLOR_PRESETS.map((color) => (
+                  <button
+                    key={color.hex}
+                    type="button"
+                    onClick={() => onChange({ themeColor: color.hex })}
+                    className={`flex items-center gap-1.5 py-1 px-2 rounded-lg border text-[11px] font-bold transition ${
+                      card.themeColor === color.hex
+                        ? 'border-[#6A5495] bg-[#6A5495]/10 text-[#6A5495]'
+                        : 'border-gray-200 text-gray-700 hover:border-gray-400'
+                    }`}
+                  >
+                    <span
+                      className="w-3.5 h-3.5 rounded-full border border-black/20"
+                      style={{ backgroundColor: color.hex }}
+                    />
+                    <span>{color.name.split(' ')[0]}</span>
+                  </button>
+                ))}
               </div>
             </div>
+
+            {/* 2D Stamps & Seals */}
+            <div className="border-b border-gray-200 pb-3 space-y-2">
+              <label className="text-xs font-bold text-gray-700 block">
+                2D Stamps & Badges:
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { id: 'verified', label: '★ Verified Stamp' },
+                  { id: 'approved', label: '✓ Approved Seal' },
+                  { id: 'pawprint', label: '🐾 Paw Watermark' },
+                ].map((stamp) => {
+                  const active = card.stamps?.includes(stamp.id as any);
+                  return (
+                    <button
+                      key={stamp.id}
+                      type="button"
+                      onClick={() => {
+                        const current = card.stamps || [];
+                        const next = active
+                          ? current.filter((s) => s !== stamp.id)
+                          : [...current, stamp.id as any];
+                        onChange({ stamps: next });
+                      }}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-bold border transition ${
+                        active
+                          ? 'bg-[#6A5495] text-white border-[#6A5495]'
+                          : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'
+                      }`}
+                    >
+                      {stamp.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Badge Holder & Lanyard Frame Settings - ONLY shown when Lanyard Mode is active! */}
+            {isLanyardMode && (
+              <div className="space-y-3 border-b border-gray-200 pb-3">
+                <div>
+                  <label className="text-xs font-bold text-gray-700 block mb-1.5">
+                    Holder Frame Color:
+                  </label>
+                  <div className="flex flex-wrap gap-1.5">
+                    {HOLDER_PRESETS.map((h) => (
+                      <button
+                        key={h.hex}
+                        type="button"
+                        onClick={() => onChange({ holderColor: h.hex })}
+                        className={`flex items-center gap-1.5 py-1 px-2 rounded-lg border text-[11px] font-bold transition ${
+                          card.holderColor === h.hex
+                            ? 'border-[#6A5495] bg-[#6A5495]/10 text-[#6A5495]'
+                            : 'border-gray-200 text-gray-700 hover:border-gray-400'
+                        }`}
+                      >
+                        <span
+                          className="w-3.5 h-3.5 rounded-full border border-black/20"
+                          style={{ backgroundColor: h.hex }}
+                        />
+                        <span>{h.name.split(' ')[0]}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Edge Doodles Toggle */}
+                <div className="flex items-center justify-between py-1">
+                  <span className="text-xs font-bold text-gray-700">Daisy Flower Doodles</span>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      onChange({
+                        holderPattern: card.holderPattern === 'flowers' ? 'clean' : 'flowers',
+                      })
+                    }
+                    className={`px-3 py-1 rounded-lg text-xs font-bold transition border ${
+                      card.holderPattern === 'flowers'
+                        ? 'bg-[#6A5495] text-white border-[#6A5495]'
+                        : 'bg-gray-100 text-gray-700 border-gray-300'
+                    }`}
+                  >
+                    {card.holderPattern === 'flowers' ? '🌼 Active' : 'Clean'}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Back to Info Button */}
+            <button
+              type="button"
+              onClick={() => setActiveGroup('identity')}
+              className="w-full mt-2 py-2 px-3 border border-gray-300 rounded-xl font-bold text-xs text-gray-700 hover:bg-gray-100 flex items-center justify-center gap-1"
+            >
+              <ArrowLeft size={13} /> Back to Info & Colors
+            </button>
           </div>
         )}
       </div>

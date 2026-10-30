@@ -43,7 +43,7 @@ export default function PhotoUploader({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3.5">
       {/* Preset 2D Avatars */}
       <div>
         <label className="text-xs font-bold text-gray-700 flex items-center gap-1.5 mb-2">
@@ -59,19 +59,19 @@ export default function PhotoUploader({
                 onClick={() => handleSelectPreset(avatar.id)}
                 className={`flex flex-col items-center justify-center p-2 rounded-xl border-2 transition relative ${
                   isSelected
-                    ? 'border-[#261F36] bg-[#6A5495]/10 shadow-[3px_3px_0px_#261F36]'
-                    : 'border-gray-200 hover:border-[#6A5495] bg-white hover:bg-gray-50'
+                    ? 'border-[#6A5495] bg-[#6A5495]/5'
+                    : 'border-gray-200 hover:border-gray-400 bg-white'
                 }`}
               >
                 <div
-                  className="w-10 h-10 rounded-lg overflow-hidden border border-[#261F36]/40 mb-1"
+                  className="w-10 h-10 rounded-lg overflow-hidden mb-1"
                   dangerouslySetInnerHTML={{ __html: avatar.svg }}
                 />
                 <span className="text-[10px] font-bold text-gray-700 truncate w-full text-center">
                   {avatar.name.split(' ')[0]}
                 </span>
                 {isSelected && (
-                  <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#6A5495] text-white text-[10px] rounded-full flex items-center justify-center font-bold">
+                  <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#6A5495] text-white text-[9px] rounded-full flex items-center justify-center font-bold">
                     ✓
                   </span>
                 )}
@@ -83,8 +83,8 @@ export default function PhotoUploader({
 
       {/* Custom Photo Upload */}
       <div>
-        <label className="text-xs font-bold text-gray-700 flex items-center gap-1.5 mb-2">
-          <Upload size={14} className="text-[#6A5495]" /> Or Upload Your Own Photo:
+        <label className="text-xs font-bold text-gray-700 flex items-center gap-1.5 mb-1.5">
+          <Upload size={14} className="text-[#6A5495]" /> Or Upload Photo from Device:
         </label>
         <div className="flex gap-2">
           <input
@@ -97,18 +97,18 @@ export default function PhotoUploader({
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="flex-1 flex items-center justify-center gap-2 py-2 px-3 border-2 border-dashed border-[#6A5495] rounded-xl bg-[#6A5495]/5 hover:bg-[#6A5495]/10 text-xs font-bold text-[#6A5495] transition"
+            className="flex-1 flex items-center justify-center gap-2 py-2 px-3 border border-dashed border-[#6A5495] rounded-xl bg-[#6A5495]/5 hover:bg-[#6A5495]/10 text-xs font-bold text-[#6A5495] transition"
           >
-            <ImageIcon size={15} /> Choose Photo from Device
+            <ImageIcon size={14} /> Choose Image File
           </button>
           {photoUrl && (
             <button
               type="button"
               onClick={() => onPhotoChange('', 'intern-kase')}
-              className="p-2 text-red-500 border-2 border-red-200 hover:bg-red-50 rounded-xl transition"
+              className="p-2 text-red-500 border border-red-200 hover:bg-red-50 rounded-xl transition"
               title="Reset to cartoon avatar"
             >
-              <Trash2 size={16} />
+              <Trash2 size={15} />
             </button>
           )}
         </div>
@@ -117,24 +117,24 @@ export default function PhotoUploader({
       {/* Photo Filter 2D Style */}
       <div>
         <label className="text-xs font-bold text-gray-700 block mb-1.5">
-          2D Photo Style & Filter:
+          Photo Style Filter:
         </label>
         <div className="grid grid-cols-4 gap-1.5">
           {(
             [
-              { id: 'doodle-border', label: '2D Outline' },
-              { id: 'comic', label: 'Comic Pop' },
-              { id: 'sketch', label: 'B&W Sketch' },
               { id: 'none', label: 'Normal' },
+              { id: 'doodle-border', label: 'Outline' },
+              { id: 'comic', label: 'Comic Pop' },
+              { id: 'sketch', label: 'B&W' },
             ] as const
           ).map((item) => (
             <button
               key={item.id}
               type="button"
               onClick={() => onFilterChange(item.id)}
-              className={`py-1.5 px-2 rounded-lg text-[11px] font-bold border-2 transition text-center ${
+              className={`py-1.5 px-2 rounded-lg text-[11px] font-bold border transition text-center ${
                 photoFilter === item.id
-                  ? 'bg-[#6A5495] text-white border-[#261F36] shadow-[2px_2px_0px_#261F36]'
+                  ? 'bg-[#6A5495] text-white border-[#6A5495]'
                   : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
               }`}
             >

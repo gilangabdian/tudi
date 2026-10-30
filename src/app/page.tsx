@@ -9,7 +9,7 @@ import SlotRail from '@/components/SlotRail';
 import { CardData } from '@/types/card';
 import { DEFAULT_CARD_DATA, FUNNY_RANDOM_PROFILES } from '@/lib/constants';
 import { toPng } from 'html-to-image';
-import { Sparkles, RotateCw, Scissors } from 'lucide-react';
+import { RotateCw, Scissors } from 'lucide-react';
 
 const STORAGE_SLOTS_KEY = 'tudi_10_slots_v3';
 const STORAGE_ACTIVE_SLOT_KEY = 'tudi_active_slot_index_v3';
@@ -26,6 +26,7 @@ export default function Home() {
   const [isMounted, setIsMounted] = useState(false);
 
   const cardRef = useRef<HTMLDivElement | null>(null);
+  const exportCardRef = useRef<HTMLDivElement | null>(null);
 
   // Load slots and active index on mount
   useEffect(() => {
@@ -81,7 +82,6 @@ export default function Home() {
   const handleSelectSlot = (index: number) => {
     if (index === currentSlotIndex) return;
 
-    // Check if slot has saved card, else initialize from template
     const existing = slotsData[index];
     if (existing) {
       setCard(existing);
@@ -108,12 +108,12 @@ export default function Home() {
   };
 
   const handleDownloadPNG = async () => {
-    if (!cardRef.current) return;
+    const exportNode = exportCardRef.current || cardRef.current;
+    if (!exportNode) return;
     setIsDownloading(true);
 
     try {
-      // 300 DPI high-DPI export
-      const dataUrl = await toPng(cardRef.current, {
+      const dataUrl = await toPng(exportNode, {
         pixelRatio: 3,
         cacheBust: true,
       });
@@ -138,67 +138,40 @@ export default function Home() {
     window.print();
   };
 
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: `tudi • ${card.title} 2D Card`,
-          text: `Check out my custom 2D card! Character: ${card.firstName} ${card.lastName}`,
-          url: window.location.href,
-        });
-      } catch (e) {
-        // user cancelled
-      }
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert('Website link copied to clipboard!');
-    }
-  };
-
   const isPortraitTemplate = card.template === 'work-badge' || card.template === 'event-pass';
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      {/* Navbar with Star 't' Icon (Clean & Non-redundant) */}
+      {/* Clean Navbar */}
       <Navbar
         onRandomize={handleRandomize}
-        isLanyardMode={isLanyardMode}
-        onToggleLanyard={() => setIsLanyardMode(!isLanyardMode)}
         onDownloadPNG={handleDownloadPNG}
         onPrint={handlePrint}
-        onShare={handleShare}
         isDownloading={isDownloading}
       />
 
-      {/* Floating 10-Slot Quick Switcher Rail on Right Side */}
+      {/* Save Slots Rail (Fading 1-4, 5-10 reveal on hover) */}
       <SlotRail
         currentSlotIndex={currentSlotIndex}
         slotsData={slotsData}
         onSelectSlot={handleSelectSlot}
       />
 
-      {/* Main Studio Workspace */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start pr-14 sm:pr-18">
-        {/* Left Column: Form Editor Sidebar (3 Structured Groups) */}
+      {/* Main Studio Workspace with Reduced Gap and No Card Wrapping */}
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-5 items-start pr-11 sm:pr-14">
+        {/* Left Column: Settings Panel (Clean, Unwrapped) */}
         <div className="lg:col-span-5 xl:col-span-4 w-full">
-          <EditorSidebar card={card} onChange={handleCardChange} />
+          <EditorSidebar
+            card={card}
+            onChange={handleCardChange}
+            isLanyardMode={isLanyardMode}
+          />
         </div>
 
-        {/* Right Column: Live Interactive Card Canvas */}
-        <div className="lg:col-span-7 xl:col-span-8 flex flex-col items-center justify-center min-h-[580px] p-4 sm:p-8 rounded-3xl border-2 border-[#261F36]/20 bg-[#F4F0FA]/40 relative overflow-hidden">
-          {/* Top Stage Badges */}
-          <div className="absolute top-4 left-6 text-xs font-['Patrick_Hand'] text-gray-500 select-none flex items-center gap-1.5">
-            <Sparkles size={14} className="text-[#6A5495]" /> 2D Live Stage Canvas
-          </div>
-
-          <div className="absolute top-4 right-6 flex items-center gap-2 select-none">
-            <span className="text-[11px] font-['Space_Mono'] bg-white border border-[#261F36]/40 px-2.5 py-0.5 rounded-full font-bold">
-              CR80 • 85.6mm × 54mm
-            </span>
-          </div>
-
-          {/* Interactive Card Stage (Captured by html-to-image) */}
-          <div className="my-auto py-4">
+        {/* Right Column: Clean Preview Stage (No heavy card wrapping, unboxed) */}
+        <div className="lg:col-span-7 xl:col-span-8 flex flex-col items-center justify-center py-2">
+          {/* Card Target Element (Visible on screen) */}
+          <div className="py-2">
             <div
               id="printable-card-area"
               ref={cardRef}
@@ -220,26 +193,44 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Single Clean Interactive Flip Control (No Redundant Buttons) */}
-          <div className="flex items-center justify-center gap-3 mt-2 z-10">
+          {/* Action Controls below Preview: Flip Card + Preview with Lanyard Toggle */}
+          <div className="flex flex-wrap items-center justify-center gap-2.5 mt-3 z-10">
+            {/* Flip Action Button */}
             <button
               type="button"
               onClick={() => setIsBack(!isBack)}
-              className="friendly-btn flex items-center gap-2 px-5 py-2.5 bg-white text-[#261F36] text-xs hover:bg-gray-50 shadow-xs"
+              className="friendly-btn flex items-center gap-2 px-4 py-2 bg-white text-[#261F36] text-xs hover:bg-gray-50 shadow-xs"
             >
               <RotateCw size={14} className={isBack ? 'rotate-180 transition-transform' : ''} />
               <span>{isBack ? 'Flip to Front Side' : 'Flip to Back Side'}</span>
             </button>
-          </div>
 
-          {/* Stage Helper Tip */}
-          <div className="mt-3 text-center">
-            <p className="text-xs text-gray-500 font-['Patrick_Hand']">
-              💡 Tip: Click slots 1-10 on the right to manage your cards. Click &apos;Print A4&apos; to get front + back sides cut-ready!
-            </p>
+            {/* Preview with Lanyard Toggle Button (relocated from header) */}
+            <button
+              type="button"
+              onClick={() => setIsLanyardMode(!isLanyardMode)}
+              className={`friendly-btn flex items-center gap-2 px-4 py-2 text-xs transition shadow-xs ${
+                isLanyardMode
+                  ? 'bg-[#6A5495] text-white hover:bg-[#56427D]'
+                  : 'bg-white text-[#261F36] hover:bg-gray-50'
+              }`}
+            >
+              <span>📿</span>
+              <span>{isLanyardMode ? 'Preview with Lanyard: ON' : 'Preview with Lanyard'}</span>
+            </button>
           </div>
         </div>
       </main>
+
+      {/* Offscreen Target for Pure Card PNG Export (Always excludes lanyard) */}
+      <div
+        className="fixed -left-[9999px] -top-[9999px] pointer-events-none opacity-0 select-none overflow-hidden"
+        aria-hidden="true"
+      >
+        <div ref={exportCardRef}>
+          <CardRenderer card={card} isBack={isBack} />
+        </div>
+      </div>
 
       {/* DEDICATED DUAL-SIDED PRINT SHEET (Only Visible When Printing) */}
       <section
@@ -247,7 +238,6 @@ export default function Home() {
         className="hidden print:block p-8 bg-white text-center font-['Fredoka']"
       >
         <div className="max-w-3xl mx-auto space-y-4">
-          {/* Print Sheet Header Instructions */}
           <div className="border-b-2 border-gray-300 pb-3 text-left">
             <h2 className="text-xl font-black text-[#261F36] flex items-center gap-2">
               <Scissors size={18} /> tudi • Printable Double-Sided Card Sheet
@@ -263,7 +253,6 @@ export default function Home() {
               isPortraitTemplate ? 'flex-col sm:flex-row' : 'flex-col md:flex-row'
             }`}
           >
-            {/* 1. FRONT SIDE */}
             <div className="flex flex-col items-center">
               <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1.5 font-['Space_Mono']">
                 ▲ SISI DEPAN (FRONT)
@@ -273,7 +262,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* FOLD DIVIDER GUIDE */}
             <div className="flex md:flex-col items-center justify-center gap-1.5 text-gray-400 py-2">
               <div className="w-12 md:w-[2px] h-[2px] md:h-20 bg-dashed border border-gray-400" />
               <span className="text-[9px] font-['Space_Mono'] uppercase font-bold tracking-widest rotate-0 md:-rotate-90">
@@ -282,7 +270,6 @@ export default function Home() {
               <div className="w-12 md:w-[2px] h-[2px] md:h-20 bg-dashed border border-gray-400" />
             </div>
 
-            {/* 2. BACK SIDE */}
             <div className="flex flex-col items-center">
               <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1.5 font-['Space_Mono']">
                 ▲ SISI BELAKANG (BACK)
@@ -292,21 +279,12 @@ export default function Home() {
               </div>
             </div>
           </div>
-
-          <div className="text-center text-[10px] text-gray-400 font-['Space_Mono'] pt-2">
-            Generated with tudi • 2D Name & Identity Card Studio • 100% Client-side
-          </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t-2 border-[#261F36]/20 bg-white py-4 px-6 text-center text-xs text-gray-500">
-        <p className="font-['Fredoka'] font-bold text-gray-700">
-          tudi • 2D Name & Identity Card Studio
-        </p>
-        <p className="font-['Patrick_Hand'] text-[13px] text-gray-400 mt-0.5">
-          Pure client-side hand-drawn 2D vector card studio. Zero servers, instant export.
-        </p>
+      {/* Footer requested by user */}
+      <footer className="py-6 border-t border-gray-200 text-center text-xs text-gray-500 font-['Space_Mono']">
+        Copyright &copy; 2026 Abdian
       </footer>
     </div>
   );

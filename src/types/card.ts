@@ -13,32 +13,32 @@ export interface CardData {
   template: TemplateType;
 
   // Common details
-  title: string;        // e.g. "TII", "CALIFORNIA", "REPUBLIC OF TUDI"
-  subtitle: string;     // e.g. "FEAR DEPT.", "Driver License", "Staff Pass"
+  title: string;
+  subtitle: string;
   firstName: string;
   lastName: string;
-  idNumber: string;     // NIK / License No / Employee ID / Barcode
+  idNumber: string;
   birthDate: string;
   gender: string;
   address?: string;
 
-  // Pop Badge / Intern Badge specific (matching Image 2)
-  companyLogoText: string; // e.g. "TII"
-  department: string;      // e.g. "FEAR DEPT."
-  roleTag: string;         // e.g. "THE INTERN"
-  holderColor: string;     // Color of the badge holder frame (default: #95CBB5 sage green)
+  // Pop Badge specific
+  companyLogoText: string;
+  department: string;
+  roleTag: string;
+  holderColor: string;
   holderPattern: 'flowers' | 'doodles' | 'clean' | 'dots';
-  stickers: string[];      // ['dnf', 'no-headaches', 'voxel-pin', 'verified']
+  stickers: string[];
 
   // Driver License specific
-  height: string;       // e.g. 6'2"
-  weight: string;       // e.g. 595 lbs
-  hair: string;         // e.g. Brown
-  eyes: string;         // e.g. DOT
-  licenseClass: string; // e.g. "CLASS M" or "BEAR"
+  height: string;
+  weight: string;
+  hair: string;
+  eyes: string;
+  licenseClass: string;
 
   // Work Badge specific
-  jobTitle: string;     // e.g. Snack Tasting Officer
+  jobTitle: string;
   companyName: string;
 
   // Event Pass specific
@@ -48,28 +48,29 @@ export interface CardData {
   venue: string;
 
   // Visual Styles
-  themeColor: string;    // Main accent (default #6A5495)
-  cardBgColor: string;   // Card paper background
+  themeColor: string;
+  cardBgColor: string;
   headerTextColor: string;
   bodyTextColor: string;
   pattern: PatternType;
 
   // Photo & Visuals
-  photoUrl: string;      // Base64 or Preset SVG/URL
+  photoUrl: string;
   photoPresetId?: string;
   photoFilter: 'none' | 'doodle-border' | 'comic' | 'sketch';
 
   // Signature
-  signatureDataUrl?: string; // Hand-drawn from canvas
-  signatureText?: string;    // Fallback typed signature
+  signatureType?: 'draw' | 'type';
+  signatureDataUrl?: string;
+  signatureText?: string;
 
   // Badges & Doodles
-  stamps: string[];      // ['verified', 'pawprint', 'approved', 'star']
+  stamps: string[]; // ['verified', 'approved', 'pawprint']
 
   // Lanyard Mockup
-  lanyardColor: string;  // Ribbon color
-  lanyardText: string;   // Ribbon custom text
-  lanyardPins: boolean;  // Whether to show enamel pins on lanyard strap
+  lanyardColor: string;
+  lanyardText: string;
+  lanyardPins: boolean;
 
   updatedAt: number;
 }

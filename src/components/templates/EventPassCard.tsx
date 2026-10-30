@@ -15,12 +15,12 @@ export default function EventPassCard({ card, isBack = false }: EventPassCardPro
 
   return (
     <div
-      className={`relative w-[320px] h-[480px] rounded-2xl border-[3.5px] border-[#261F36] shadow-[6px_6px_0px_#261F36] p-5 select-none overflow-hidden transition-all duration-300 font-['Patrick_Hand'] flex flex-col justify-between ${
+      className={`relative w-[320px] h-[480px] rounded-2xl border-[3.5px] border-[#261F36] shadow-sm p-5 select-none overflow-hidden transition-all duration-300 font-['Patrick_Hand'] flex flex-col justify-between ${
         card.pattern === 'dots'
           ? 'pattern-dots'
           : card.pattern === 'grid'
           ? 'pattern-grid'
-          : 'bg-[#FAF7F0]'
+          : ''
       }`}
       style={{
         backgroundColor: card.cardBgColor || '#FAF7F0',
@@ -49,7 +49,7 @@ export default function EventPassCard({ card, isBack = false }: EventPassCardPro
           {/* Bold VIP Tier Banner */}
           <div className="my-1">
             <div
-              className="w-full py-1.5 px-3 rounded-xl border-2 border-[#261F36] text-white text-center font-black tracking-widest font-['Fredoka'] text-lg shadow-[3px_3px_0px_#261F36]"
+              className="w-full py-1.5 px-3 rounded-xl border-2 border-[#261F36] text-white text-center font-black tracking-widest font-['Fredoka'] text-lg shadow-xs"
               style={{ backgroundColor: card.themeColor }}
             >
               ★ {card.accessTier || 'VIP ACCESS'} ★
@@ -59,7 +59,7 @@ export default function EventPassCard({ card, isBack = false }: EventPassCardPro
           {/* Attendee Photo Frame */}
           <div className="flex justify-center my-auto">
             <div
-              className={`w-[125px] h-[145px] rounded-xl border-[2.5px] border-[#261F36] bg-[#6A5495]/15 overflow-hidden shadow-[4px_4px_0px_#261F36] relative flex items-center justify-center ${
+              className={`w-[125px] h-[145px] rounded-xl border-[2.5px] border-[#261F36] bg-white overflow-hidden shadow-xs relative flex items-center justify-center ${
                 card.photoFilter === 'comic'
                   ? 'contrast-125 saturate-150'
                   : card.photoFilter === 'sketch'
@@ -75,7 +75,7 @@ export default function EventPassCard({ card, isBack = false }: EventPassCardPro
                 />
               ) : (
                 <div
-                  className="w-full h-full"
+                  className="w-full h-full [&>svg]:w-full [&>svg]:h-full [&>svg]:block"
                   dangerouslySetInnerHTML={{ __html: currentAvatar.svg }}
                 />
               )}
@@ -90,16 +90,48 @@ export default function EventPassCard({ card, isBack = false }: EventPassCardPro
             <p className="text-xs font-bold text-gray-700">
               Venue: {card.venue || 'Main Stage A • Gate 4'}
             </p>
+
+            {/* Signature */}
+            <div className="w-[110px] mx-auto h-[22px] flex items-center justify-center border-b border-[#261F36]/30">
+              {card.signatureType !== 'type' && card.signatureDataUrl ? (
+                <img src={card.signatureDataUrl} alt="Signature" className="max-h-[20px] max-w-full object-contain" />
+              ) : (
+                <span className="font-['Caveat'] text-lg font-bold leading-none text-[#261F36]">
+                  {card.signatureText || `${card.firstName || 'Guest'}`}
+                </span>
+              )}
+            </div>
           </div>
 
+          {/* Stamps if selected */}
+          {card.stamps && card.stamps.length > 0 && (
+            <div className="flex justify-center gap-2 py-0.5">
+              {card.stamps.includes('verified') && (
+                <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-blue-50 border border-blue-400 text-blue-700 text-[9px] font-black rounded-md uppercase tracking-wider">
+                  ★ Verified
+                </span>
+              )}
+              {card.stamps.includes('approved') && (
+                <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-green-50 border border-green-400 text-green-700 text-[9px] font-black rounded-md uppercase tracking-wider">
+                  ✓ Approved
+                </span>
+              )}
+              {card.stamps.includes('pawprint') && (
+                <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-purple-50 border border-purple-400 text-purple-700 text-[9px] font-black rounded-md uppercase tracking-wider">
+                  🐾 Paw
+                </span>
+              )}
+            </div>
+          )}
+
           {/* Ticket Barcode */}
-          <div className="border-t-2 border-[#261F36] pt-2 flex flex-col items-center gap-1">
-            <div className="flex items-center gap-1 h-7">
+          <div className="border-t-2 border-[#261F36] pt-1 flex flex-col items-center gap-0.5">
+            <div className="flex items-center gap-1 h-6">
               {[5, 2, 4, 1, 3, 5, 2, 4, 1, 3, 5, 2, 4, 1, 5, 3, 2, 4].map((h, i) => (
                 <div
                   key={i}
                   className="w-[2.5px] bg-[#261F36] rounded-full"
-                  style={{ height: `${h * 4}px` }}
+                  style={{ height: `${h * 3.5}px` }}
                 />
               ))}
             </div>

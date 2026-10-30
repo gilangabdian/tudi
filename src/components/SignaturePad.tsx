@@ -1,39 +1,57 @@
 'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
-import { RotateCcw, PenTool, Type, Eraser } from 'lucide-react';
+import { PenTool, Type, Eraser } from 'lucide-react';
 
 interface SignaturePadProps {
+  signatureType?: 'draw' | 'type';
   signatureDataUrl?: string;
   signatureText?: string;
-  onChange: (data: { signatureDataUrl?: string; signatureText?: string }) => void;
+  onChange: (data: {
+    signatureType: 'draw' | 'type';
+    signatureDataUrl?: string;
+    signatureText?: string;
+  }) => void;
 }
 
 export default function SignaturePad({
+  signatureType = 'draw',
   signatureDataUrl,
   signatureText = '',
   onChange,
 }: SignaturePadProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
-  const [mode, setMode] = useState<'draw' | 'type'>(signatureDataUrl ? 'draw' : 'type');
+  const [mode, setMode] = useState<'draw' | 'type'>(signatureType);
   const [typedName, setTypedName] = useState(signatureText || 'Kase Y.');
+  const [lastDrawnUrl, setLastDrawnUrl] = useState<string | undefined>(signatureDataUrl);
 
+  // Restore drawing on canvas when mode is 'draw' or when signatureDataUrl changes
   useEffect(() => {
+    if (mode !== 'draw') return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    if (signatureDataUrl) {
+    if (lastDrawnUrl) {
       const img = new Image();
       img.onload = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       };
-      img.src = signatureDataUrl;
+      img.src = lastDrawnUrl;
     }
-  }, [signatureDataUrl]);
+  }, [mode, lastDrawnUrl]);
+
+  const handleSwitchMode = (newMode: 'draw' | 'type') => {
+    setMode(newMode);
+    onChange({
+      signatureType: newMode,
+      signatureDataUrl: lastDrawnUrl,
+      signatureText: typedName,
+    });
+  };
 
   const startDrawing = (
     e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
@@ -52,7 +70,7 @@ export default function SignaturePad({
     ctx.lineWidth = 2.5;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    ctx.strokeStyle = '#1E1B2E';
+    ctx.strokeStyle = '#1E293B';
     setIsDrawing(true);
   };
 
@@ -79,7 +97,12 @@ export default function SignaturePad({
     const canvas = canvasRef.current;
     if (!canvas) return;
     const dataUrl = canvas.toDataURL('image/png');
-    onChange({ signatureDataUrl: dataUrl, signatureText: typedName });
+    setLastDrawnUrl(dataUrl);
+    onChange({
+      signatureType: 'draw',
+      signatureDataUrl: dataUrl,
+      signatureText: typedName,
+    });
   };
 
   const clearCanvas = () => {
@@ -88,48 +111,58 @@ export default function SignaturePad({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    onChange({ signatureDataUrl: undefined, signatureText: typedName });
+    setLastDrawnUrl(undefined);
+    onChange({
+      signatureType: 'draw',
+      signatureDataUrl: undefined,
+      signatureText: typedName,
+    });
   };
 
   const handleTypeChange = (val: string) => {
     setTypedName(val);
-    onChange({ signatureDataUrl, signatureText: val });
+    onChange({
+      signatureType: 'type',
+      signatureDataUrl: lastDrawnUrl,
+      signatureText: val,
+    });
   };
 
   return (
     <div className="space-y-3">
+      {/* Mode Switcher Tabs */}
       <div className="flex gap-2">
         <button
           type="button"
-          onClick={() => setMode('draw')}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-bold border-2 transition ${
+          onClick={() => handleSwitchMode('draw')}
+          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-xl text-xs font-bold border transition ${
             mode === 'draw'
-              ? 'bg-[#6A5495] text-white border-[#261F36] shadow-[2px_2px_0px_#261F36]'
-              : 'bg-white text-gray-700 border-gray-300 hover:border-[#6A5495]'
+              ? 'bg-[#6A5495] text-white border-[#6A5495]'
+              : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
           }`}
         >
-          <PenTool size={14} /> Draw by Hand
+          <PenTool size={13} /> Draw by Hand
         </button>
         <button
           type="button"
-          onClick={() => setMode('type')}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-bold border-2 transition ${
+          onClick={() => handleSwitchMode('type')}
+          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-xl text-xs font-bold border transition ${
             mode === 'type'
-              ? 'bg-[#6A5495] text-white border-[#261F36] shadow-[2px_2px_0px_#261F36]'
-              : 'bg-white text-gray-700 border-gray-300 hover:border-[#6A5495]'
+              ? 'bg-[#6A5495] text-white border-[#6A5495]'
+              : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
           }`}
         >
-          <Type size={14} /> Type Cursive Font
+          <Type size={13} /> Type Cursive Font
         </button>
       </div>
 
       {mode === 'draw' ? (
         <div className="space-y-2">
-          <div className="relative border-2 border-[#261F36] rounded-xl bg-white overflow-hidden shadow-[3px_3px_0px_#261F36]">
+          <div className="relative border border-gray-300 rounded-xl bg-white overflow-hidden">
             <canvas
               ref={canvasRef}
               width={340}
-              height={100}
+              height={95}
               onMouseDown={startDrawing}
               onMouseMove={draw}
               onMouseUp={stopDrawing}
@@ -137,7 +170,7 @@ export default function SignaturePad({
               onTouchStart={startDrawing}
               onTouchMove={draw}
               onTouchEnd={stopDrawing}
-              className="w-full h-[100px] cursor-crosshair touch-none bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:12px_12px]"
+              className="w-full h-[95px] cursor-crosshair touch-none bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:12px_12px]"
             />
             <div className="absolute bottom-1 right-2 pointer-events-none text-[11px] font-['Patrick_Hand'] text-gray-400">
               draw signature here ✍️
@@ -146,9 +179,9 @@ export default function SignaturePad({
           <button
             type="button"
             onClick={clearCanvas}
-            className="flex items-center gap-1 text-xs text-red-600 hover:text-red-700 font-semibold px-2 py-1 rounded bg-red-50 border border-red-200"
+            className="flex items-center gap-1 text-xs text-red-600 hover:text-red-700 font-semibold px-2 py-1 rounded-lg bg-red-50 border border-red-200"
           >
-            <Eraser size={13} /> Clear Canvas
+            <Eraser size={12} /> Clear Canvas
           </button>
         </div>
       ) : (
@@ -158,11 +191,11 @@ export default function SignaturePad({
             value={typedName}
             onChange={(e) => handleTypeChange(e.target.value)}
             placeholder="Type name for signature..."
-            className="w-full px-3 py-2 border-2 border-[#261F36] rounded-xl text-xs font-['Patrick_Hand'] text-lg focus:outline-none focus:ring-2 focus:ring-[#6A5495]"
+            className="w-full px-3 py-2 border border-gray-300 rounded-xl text-xs font-['Patrick_Hand'] text-base focus:outline-none focus:border-[#6A5495]"
           />
-          <div className="p-3 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl text-center">
-            <span className="text-xs text-gray-500 block mb-1">Live Signature Preview:</span>
-            <span className="font-['Caveat'] text-2xl text-[#261F36] font-bold">
+          <div className="p-2.5 bg-gray-50 border border-dashed border-gray-300 rounded-xl text-center">
+            <span className="text-[11px] text-gray-400 block mb-0.5">Live Signature:</span>
+            <span className="font-['Caveat'] text-2xl text-[#2D3748] font-bold">
               {typedName || 'Your Signature'}
             </span>
           </div>
