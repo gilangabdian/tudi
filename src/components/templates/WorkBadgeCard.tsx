@@ -153,9 +153,30 @@ export default function WorkBadgeCard({ card, isBack = false }: WorkBadgeCardPro
         </div>
       )}
 
+      {/* Verified Stamp Overlay */}
       {card.stamps?.includes('verified') && (
-        <div className="absolute bottom-16 right-4 rotate-12 pointer-events-none border border-[#6A5495] text-[#6A5495] px-2 py-0.5 rounded text-[10px] font-black uppercase font-['Fredoka'] bg-white/90">
-          ★ OFFICIAL
+        <div className="absolute top-6 right-4 rotate-12 pointer-events-none border-2 border-[#10B981] text-[#10B981] px-2.5 py-0.5 rounded-md text-[11px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
+          ★ VERIFIED
+        </div>
+      )}
+
+      {/* Approved Seal Overlay */}
+      {card.stamps?.includes('approved') && (
+        <div className="absolute bottom-14 left-4 -rotate-12 pointer-events-none border-2 border-[#EF4444] text-[#EF4444] px-2.5 py-0.5 rounded-md text-[11px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
+          ✓ APPROVED
+        </div>
+      )}
+
+      {/* 2D Capybara Paw Watermark */}
+      {card.stamps?.includes('pawprint') && (
+        <div className="absolute bottom-28 right-6 rotate-12 pointer-events-none opacity-30 z-10">
+          <svg viewBox="0 0 60 60" className="w-14 h-14" style={{ fill: card.themeColor || '#2E7D32' }}>
+            <ellipse cx="30" cy="40" rx="15" ry="12" />
+            <ellipse cx="14" cy="22" rx="4.5" ry="7" transform="rotate(-18 14 22)" />
+            <ellipse cx="25" cy="16" rx="4.5" ry="8" transform="rotate(-6 25 16)" />
+            <ellipse cx="35" cy="16" rx="4.5" ry="8" transform="rotate(6 35 16)" />
+            <ellipse cx="46" cy="22" rx="4.5" ry="7" transform="rotate(18 46 22)" />
+          </svg>
         </div>
       )}
     </div>

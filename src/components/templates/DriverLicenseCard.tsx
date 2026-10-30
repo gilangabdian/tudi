@@ -257,12 +257,21 @@ export default function DriverLicenseCard({ card, isBack = false }: DriverLicens
 
       {/* Decorative Stamps Overlay */}
       {card.stamps?.includes('verified') && (
-        <div className="absolute top-3 right-3 pointer-events-none rotate-12 border border-[#2ECC71] text-[#2ECC71] px-2 py-0.5 rounded-md text-[11px] font-black uppercase font-['Fredoka'] tracking-widest bg-white/80">
+        <div className="absolute top-3 right-4 pointer-events-none rotate-12 border-2 border-[#10B981] text-[#10B981] px-2.5 py-0.5 rounded-md text-[11px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
           ★ VERIFIED
         </div>
       )}
+
+      {/* Approved Seal Overlay */}
+      {card.stamps?.includes('approved') && (
+        <div className="absolute bottom-12 left-4 pointer-events-none rotate-[-8deg] border-2 border-[#EF4444] text-[#EF4444] px-2.5 py-0.5 rounded-md text-[11px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
+          ✓ APPROVED
+        </div>
+      )}
+
+      {/* 2D Grizzly Bear Paw Watermark */}
       {card.stamps?.includes('pawprint') && (
-        <div className="absolute bottom-10 right-28 pointer-events-none rotate-[-15deg] opacity-60">
+        <div className="absolute bottom-10 right-28 pointer-events-none rotate-[-15deg] opacity-50 z-10">
           <svg viewBox="0 0 60 70" className="w-10 h-12 fill-[#8B5A2B]">
             <ellipse cx="30" cy="46" rx="14" ry="17" />
             <circle cx="16" cy="22" r="5" />

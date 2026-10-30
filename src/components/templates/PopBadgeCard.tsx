@@ -221,16 +221,32 @@ export default function PopBadgeCard({ card, isBack = false }: PopBadgeCardProps
         </div>
       )}
 
-      {/* Verified Stamp */}
+      {/* Verified Stamp Overlay */}
       {card.stamps?.includes('verified') && (
-        <div className="absolute top-3 left-3 rotate-[-8deg] pointer-events-none border border-[#2ECC71] text-[#2ECC71] px-2 py-0.5 rounded text-[10px] font-black uppercase font-['Fredoka'] bg-white/90">
+        <div className="absolute top-3 left-4 rotate-[-8deg] pointer-events-none border-2 border-[#10B981] text-[#10B981] px-2.5 py-0.5 rounded-md text-[11px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
           ★ VERIFIED
         </div>
       )}
-      {/* Approved Stamp */}
+
+      {/* Approved Seal Overlay (Positioned top-right to never collide with stickers) */}
       {card.stamps?.includes('approved') && (
-        <div className="absolute bottom-12 left-4 rotate-[12deg] pointer-events-none border border-[#E17055] text-[#E17055] px-2 py-0.5 rounded text-[10px] font-black uppercase font-['Fredoka'] bg-white/90">
+        <div className="absolute top-3 right-5 rotate-[10deg] pointer-events-none border-2 border-[#EF4444] text-[#EF4444] px-2.5 py-0.5 rounded-md text-[11px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
           ✓ APPROVED
+        </div>
+      )}
+
+      {/* 2D Kitten Paw Watermark */}
+      {card.stamps?.includes('pawprint') && (
+        <div className="absolute bottom-14 right-24 pointer-events-none rotate-[-10deg] opacity-35 z-10">
+          <svg viewBox="0 0 60 60" className="w-12 h-12" style={{ fill: card.themeColor || '#6A5495' }}>
+            {/* Main cat palm */}
+            <path d="M 30,26 C 24,26 18,31 19,41 C 20,49 26,53 30,53 C 34,53 40,49 41,41 C 42,31 36,26 30,26 Z" />
+            {/* 4 Cute toe beans */}
+            <circle cx="16" cy="22" r="4.5" />
+            <circle cx="25" cy="15" r="4.5" />
+            <circle cx="35" cy="15" r="4.5" />
+            <circle cx="44" cy="22" r="4.5" />
+          </svg>
         </div>
       )}
     </div>

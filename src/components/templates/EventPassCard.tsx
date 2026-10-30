@@ -103,27 +103,6 @@ export default function EventPassCard({ card, isBack = false }: EventPassCardPro
             </div>
           </div>
 
-          {/* Stamps if selected */}
-          {card.stamps && card.stamps.length > 0 && (
-            <div className="flex justify-center gap-2 py-0.5">
-              {card.stamps.includes('verified') && (
-                <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-blue-50 border border-blue-400 text-blue-700 text-[9px] font-black rounded-md uppercase tracking-wider">
-                  ★ Verified
-                </span>
-              )}
-              {card.stamps.includes('approved') && (
-                <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-green-50 border border-green-400 text-green-700 text-[9px] font-black rounded-md uppercase tracking-wider">
-                  ✓ Approved
-                </span>
-              )}
-              {card.stamps.includes('pawprint') && (
-                <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-purple-50 border border-purple-400 text-purple-700 text-[9px] font-black rounded-md uppercase tracking-wider">
-                  🐾 Paw
-                </span>
-              )}
-            </div>
-          )}
-
           {/* Ticket Barcode */}
           <div className="border-t-2 border-[#261F36] pt-1 flex flex-col items-center gap-0.5">
             <div className="flex items-center gap-1 h-6">
@@ -161,6 +140,33 @@ export default function EventPassCard({ card, isBack = false }: EventPassCardPro
           <div className="border-t-2 border-[#261F36] pt-2 text-center text-xs font-['Space_Mono']">
             NON-TRANSFERABLE PASS
           </div>
+        </div>
+      )}
+
+      {/* Verified Stamp Overlay */}
+      {card.stamps?.includes('verified') && (
+        <div className="absolute top-6 left-4 -rotate-12 pointer-events-none border-2 border-[#10B981] text-[#10B981] px-2.5 py-0.5 rounded-md text-[11px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
+          ★ VERIFIED
+        </div>
+      )}
+
+      {/* Approved Seal Overlay */}
+      {card.stamps?.includes('approved') && (
+        <div className="absolute bottom-16 right-4 rotate-10 pointer-events-none border-2 border-[#EF4444] text-[#EF4444] px-2.5 py-0.5 rounded-md text-[11px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
+          ✓ APPROVED
+        </div>
+      )}
+
+      {/* 2D Festival Lucky Paw Watermark */}
+      {card.stamps?.includes('pawprint') && (
+        <div className="absolute bottom-32 left-6 rotate-[-15deg] pointer-events-none opacity-30 z-10">
+          <svg viewBox="0 0 60 60" className="w-14 h-14" style={{ fill: card.themeColor || '#F59E0B' }}>
+            <path d="M 30,28 C 22,28 17,33 18,43 C 19,51 25,54 30,54 C 35,54 41,51 42,43 C 43,33 38,28 30,28 Z" />
+            <circle cx="15" cy="22" r="4.5" />
+            <circle cx="25" cy="14" r="5" />
+            <circle cx="35" cy="14" r="5" />
+            <circle cx="45" cy="22" r="4.5" />
+          </svg>
         </div>
       )}
     </div>

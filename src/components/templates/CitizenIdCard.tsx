@@ -155,27 +155,6 @@ export default function CitizenIdCard({ card, isBack = false }: CitizenIdCardPro
                   </span>
                 )}
               </div>
-
-              {/* Stamps if selected */}
-              {card.stamps && card.stamps.length > 0 && (
-                <div className="flex justify-center gap-1 mt-1">
-                  {card.stamps.includes('verified') && (
-                    <span className="px-1.5 py-0.2 bg-blue-100 border border-blue-400 text-blue-700 text-[8px] font-black rounded uppercase">
-                      ★ Verified
-                    </span>
-                  )}
-                  {card.stamps.includes('approved') && (
-                    <span className="px-1.5 py-0.2 bg-green-100 border border-green-400 text-green-700 text-[8px] font-black rounded uppercase">
-                      ✓ Approved
-                    </span>
-                  )}
-                  {card.stamps.includes('pawprint') && (
-                    <span className="px-1.5 py-0.2 bg-purple-100 border border-purple-400 text-purple-700 text-[8px] font-black rounded uppercase">
-                      🐾 Paw
-                    </span>
-                  )}
-                </div>
-              )}
             </div>
           </div>
 
@@ -232,9 +211,33 @@ export default function CitizenIdCard({ card, isBack = false }: CitizenIdCardPro
         </div>
       )}
 
-      {card.stamps.includes('approved') && (
-        <div className="absolute bottom-10 left-6 rotate-[-12deg] pointer-events-none border-2 border-red-500 text-red-500 px-2 py-0.5 rounded text-xs font-black uppercase font-['Fredoka'] bg-white/90 shadow-xs">
+      {/* Verified Stamp Overlay */}
+      {card.stamps?.includes('verified') && (
+        <div className="absolute top-3 right-5 rotate-[10deg] pointer-events-none border-2 border-[#10B981] text-[#10B981] px-2.5 py-0.5 rounded-md text-[11px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
+          ★ VERIFIED
+        </div>
+      )}
+
+      {/* Approved Seal Overlay */}
+      {card.stamps?.includes('approved') && (
+        <div className="absolute bottom-8 left-6 rotate-[-12deg] pointer-events-none border-2 border-[#EF4444] text-[#EF4444] px-2.5 py-0.5 rounded-md text-[11px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
           ✓ APPROVED
+        </div>
+      )}
+
+      {/* 2D Star Mascot Paw Watermark */}
+      {card.stamps?.includes('pawprint') && (
+        <div className="absolute bottom-12 right-36 rotate-[-8deg] pointer-events-none opacity-30 z-10">
+          <svg viewBox="0 0 60 60" className="w-14 h-14" style={{ fill: card.themeColor || '#6A5495' }}>
+            {/* Stylized rounded mascot palm with central star cutout */}
+            <ellipse cx="30" cy="38" rx="14" ry="12" />
+            <polygon points="30,32 32,36 36,37 33,40 34,44 30,42 26,44 27,40 24,37 28,36" fill="#FAF7F0" />
+            {/* 4 Mascot toe beans */}
+            <ellipse cx="14" cy="22" rx="4.5" ry="6" transform="rotate(-18 14 22)" />
+            <ellipse cx="25" cy="15" rx="4.5" ry="6.5" transform="rotate(-6 25 15)" />
+            <ellipse cx="35" cy="15" rx="4.5" ry="6.5" transform="rotate(6 35 15)" />
+            <ellipse cx="46" cy="22" rx="4.5" ry="6" transform="rotate(18 46 22)" />
+          </svg>
         </div>
       )}
     </div>

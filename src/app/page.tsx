@@ -176,44 +176,43 @@ export default function Home() {
       {/* DEDICATED DUAL-SIDED PRINT SHEET (Only Visible When Printing) */}
       <section
         id="printable-dual-card-sheet"
-        className="hidden print:block p-8 bg-white text-center font-['Fredoka']"
+        className="hidden print:block p-6 bg-white text-center font-['Fredoka']"
       >
-        <div className="max-w-3xl mx-auto space-y-4">
-          <div className="border-b-2 border-gray-300 pb-3 text-left">
-            <h2 className="text-xl font-black text-[#261F36] flex items-center gap-2">
-              <Scissors size={18} /> tudi • Printable Double-Sided Card Sheet
+        <div className={`max-w-2xl mx-auto space-y-3 ${isPortraitTemplate ? 'print:scale-[0.88] print:origin-top' : ''}`}>
+          <div className="border-b-2 border-gray-300 pb-2 text-left">
+            <h2 className="text-lg font-black text-[#261F36] flex items-center gap-2">
+              <Scissors size={18} /> tudi • Printable Dual-Sided Card Sheet
             </h2>
-            <p className="text-xs text-gray-600 mt-1 font-['Patrick_Hand']">
-              Standard CR80 Wallet Size (85.6mm × 54mm). Cut along the dashed line, fold in half, and slide into your badge sleeve or wallet!
+            <p className="text-xs text-gray-600 mt-0.5 font-['Patrick_Hand']">
+              Standard CR80 Size (85.6mm × 54mm). Cut along the border guide, fold along the center line, and insert into your wallet or badge sleeve!
             </p>
           </div>
 
-          {/* Dual Card Layout Container (Front & Back Side-by-Side without Lanyard) */}
-          <div
-            className={`flex items-center justify-center gap-6 p-4 border-2 border-dashed border-gray-400 rounded-2xl bg-white ${
-              isPortraitTemplate ? 'flex-col sm:flex-row' : 'flex-col md:flex-row'
-            }`}
-          >
+          {/* Dual Card Layout Container (Strictly Vertical Stack - Atas Bawah) */}
+          <div className="flex flex-col items-center justify-center gap-3 p-4 border-2 border-dashed border-gray-400 rounded-2xl bg-white">
+            {/* Front Side */}
             <div className="flex flex-col items-center">
               <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1.5 font-['Space_Mono']">
-                ▲ SISI DEPAN (FRONT)
+                ▲ FRONT SIDE
               </span>
               <div className="border border-gray-300 rounded-2xl overflow-hidden p-0.5">
                 <CardRenderer card={card} isBack={false} />
               </div>
             </div>
 
-            <div className="flex md:flex-col items-center justify-center gap-1.5 text-gray-400 py-2">
-              <div className="w-12 md:w-[2px] h-[2px] md:h-20 bg-dashed border border-gray-400" />
-              <span className="text-[9px] font-['Space_Mono'] uppercase font-bold tracking-widest rotate-0 md:-rotate-90">
-                FOLD LINE
+            {/* Horizontal Fold Line Guide */}
+            <div className="w-full max-w-lg flex items-center justify-center gap-2 text-gray-400 py-1">
+              <div className="flex-1 h-[1px] border-b-2 border-dashed border-gray-400" />
+              <span className="text-[9px] font-['Space_Mono'] uppercase font-bold tracking-widest px-2 flex items-center gap-1.5 whitespace-nowrap">
+                <Scissors size={11} /> FOLD LINE (FOLD HERE AFTER CUTTING)
               </span>
-              <div className="w-12 md:w-[2px] h-[2px] md:h-20 bg-dashed border border-gray-400" />
+              <div className="flex-1 h-[1px] border-b-2 border-dashed border-gray-400" />
             </div>
 
+            {/* Back Side */}
             <div className="flex flex-col items-center">
               <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1.5 font-['Space_Mono']">
-                ▲ SISI BELAKANG (BACK)
+                ▲ BACK SIDE
               </span>
               <div className="border border-gray-300 rounded-2xl overflow-hidden p-0.5">
                 <CardRenderer card={card} isBack={true} />
