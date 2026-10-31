@@ -54,6 +54,23 @@ export default function SignaturePad({
     });
   };
 
+  const getCoordinates = (
+    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>,
+    canvas: HTMLCanvasElement
+  ) => {
+    const rect = canvas.getBoundingClientRect();
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+
+    return {
+      x: (clientX - rect.left) * scaleX,
+      y: (clientY - rect.top) * scaleY,
+    };
+  };
+
   const startDrawing = (
     e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
   ) => {
@@ -62,13 +79,11 @@ export default function SignaturePad({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const rect = canvas.getBoundingClientRect();
-    const x = 'touches' in e ? e.touches[0].clientX - rect.left : e.clientX - rect.left;
-    const y = 'touches' in e ? e.touches[0].clientY - rect.top : e.clientY - rect.top;
+    const { x, y } = getCoordinates(e, canvas);
 
     ctx.beginPath();
     ctx.moveTo(x, y);
-    ctx.lineWidth = 2.5;
+    ctx.lineWidth = 3;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.strokeStyle = '#1E293B';
@@ -84,9 +99,7 @@ export default function SignaturePad({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const rect = canvas.getBoundingClientRect();
-    const x = 'touches' in e ? e.touches[0].clientX - rect.left : e.clientX - rect.left;
-    const y = 'touches' in e ? e.touches[0].clientY - rect.top : e.clientY - rect.top;
+    const { x, y } = getCoordinates(e, canvas);
 
     ctx.lineTo(x, y);
     ctx.stroke();
@@ -157,11 +170,11 @@ export default function SignaturePad({
 
       {mode === 'draw' ? (
         <div className="space-y-2">
-          <div className="relative border border-gray-300 rounded-xl bg-white overflow-hidden">
+          <div className="relative border border-gray-300 rounded-xl bg-white overflow-hidden shadow-2xs">
             <canvas
               ref={canvasRef}
-              width={340}
-              height={95}
+              width={500}
+              height={150}
               onMouseDown={startDrawing}
               onMouseMove={draw}
               onMouseUp={stopDrawing}
@@ -169,9 +182,9 @@ export default function SignaturePad({
               onTouchStart={startDrawing}
               onTouchMove={draw}
               onTouchEnd={stopDrawing}
-              className="w-full h-[95px] cursor-crosshair touch-none bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:12px_12px]"
+              className="w-full h-[150px] cursor-crosshair touch-none bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:12px_12px]"
             />
-            <div className="absolute bottom-1 right-2 pointer-events-none text-[11px] font-['Patrick_Hand'] text-gray-400">
+            <div className="absolute bottom-1.5 right-2.5 pointer-events-none text-xs font-['Patrick_Hand'] text-gray-400 select-none">
               draw signature here ✍️
             </div>
           </div>
