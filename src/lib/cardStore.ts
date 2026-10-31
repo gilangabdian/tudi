@@ -3,11 +3,61 @@ import { DEFAULT_CARD_DATA } from './constants';
 
 export const STORAGE_SLOTS_KEY = 'tudi_10_slots_v3';
 export const STORAGE_ACTIVE_SLOT_KEY = 'tudi_active_slot_index_v3';
+export const COOKIE_CARD_META_KEY = 'tudi_active_card_meta';
 
 export interface CardStoreState {
   currentSlotIndex: number;
   slotsData: Record<number, CardData | null>;
   card: CardData;
+}
+
+export type CardMetaDraft = CardData & {
+  currentSlotIndex?: number;
+};
+
+export function parseCardMetaCookie(cookieVal?: string): CardData {
+  if (!cookieVal) return DEFAULT_CARD_DATA;
+  try {
+    let raw = cookieVal;
+    if (raw.startsWith('%') || raw.includes('%7B') || raw.includes('%22')) {
+      try {
+        raw = decodeURIComponent(raw);
+      } catch {}
+    }
+    const meta = JSON.parse(raw) as Partial<CardData>;
+    return {
+      ...DEFAULT_CARD_DATA,
+      ...meta,
+    };
+  } catch {
+    try {
+      const meta = JSON.parse(decodeURIComponent(cookieVal)) as Partial<CardData>;
+      return {
+        ...DEFAULT_CARD_DATA,
+        ...meta,
+      };
+    } catch {
+      return DEFAULT_CARD_DATA;
+    }
+  }
+}
+
+export function saveCardMetaToCookie(card: CardData, slotIndex: number) {
+  if (typeof document === 'undefined') return;
+  try {
+    // Exclude large base64 image & signature blobs to keep cookie lightweight and safe under 4KB
+    const meta: CardMetaDraft = {
+      ...card,
+      photoUrl: '',
+      signatureDataUrl: '',
+      currentSlotIndex: slotIndex,
+    };
+
+    const val = encodeURIComponent(JSON.stringify(meta));
+    document.cookie = `${COOKIE_CARD_META_KEY}=${val}; path=/; max-age=31536000; SameSite=Lax`;
+  } catch (e) {
+    console.warn('Cookie save error:', e);
+  }
 }
 
 const defaultServerState: CardStoreState = {
@@ -45,6 +95,9 @@ function loadInitialState(): CardStoreState {
     }
 
     const initialCard = parsedSlots[initialIndex] || parsedSlots[0] || DEFAULT_CARD_DATA;
+    // Immediately keep the cookie in sync so any reload preserves the exact card across SSR
+    saveCardMetaToCookie(initialCard, initialIndex);
+
     return {
       currentSlotIndex: initialIndex,
       slotsData: parsedSlots,
@@ -118,6 +171,8 @@ export function updateCard(updated: Partial<CardData>) {
     console.warn('LocalStorage save error:', e);
   }
 
+  saveCardMetaToCookie(nextCard, currentState.currentSlotIndex);
+
   notify();
 }
 
@@ -155,6 +210,8 @@ export function selectSlot(index: number) {
   } catch (e) {
     console.warn('LocalStorage save error:', e);
   }
+
+  saveCardMetaToCookie(nextCard, index);
 
   notify();
 }

@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { CardData, TemplateType } from '@/types/card';
 import { COLOR_PRESETS, HOLDER_PRESETS, BG_PRESETS } from '@/lib/constants';
 import PhotoUploader from './PhotoUploader';
@@ -22,31 +23,22 @@ interface EditorSidebarProps {
 
 type GroupTab = 'template' | 'identity' | 'creative';
 
-const STORAGE_ACTIVE_TAB_KEY = 'tudi_active_tab_group';
-
 export default function EditorSidebar({ card, onChange, isLanyardMode = false }: EditorSidebarProps) {
-  // Default to 'template' for new users (if no previous tab is saved)
-  const [activeGroup, setActiveGroup] = useState<GroupTab>('template');
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
 
-  // Restore user's last visited tab from localStorage upon mount
-  useEffect(() => {
-    try {
-      const savedTab = localStorage.getItem(STORAGE_ACTIVE_TAB_KEY) as GroupTab | null;
-      if (savedTab === 'template' || savedTab === 'identity' || savedTab === 'creative') {
-        setActiveGroup(savedTab);
-      }
-    } catch (e) {
-      console.warn('Failed to load active tab from localStorage:', e);
-    }
-  }, []);
+  // Read tab directly from URL query params. Default to 'template' for new users.
+  const tabParam = searchParams.get('tab') as GroupTab | null;
+  const activeGroup: GroupTab =
+    tabParam === 'identity' || tabParam === 'creative' || tabParam === 'template'
+      ? tabParam
+      : 'template';
 
   const handleTabChange = (tab: GroupTab) => {
-    setActiveGroup(tab);
-    try {
-      localStorage.setItem(STORAGE_ACTIVE_TAB_KEY, tab);
-    } catch (e) {
-      console.warn('Failed to save active tab to localStorage:', e);
-    }
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('tab', tab);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   const templates: { id: TemplateType; title: string; desc: string; icon: string }[] = [
@@ -207,7 +199,7 @@ export default function EditorSidebar({ card, onChange, isLanyardMode = false }:
             {/* Clear Next Step Button */}
             <button
               type="button"
-              onClick={() => setActiveGroup('identity')}
+              onClick={() => handleTabChange('identity')}
               className="w-full mt-3 py-2.5 px-4 bg-[#6A5495] text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-[#56427D] transition shadow-xs"
             >
               <span>Continue to Info & Colors</span>
@@ -460,14 +452,14 @@ export default function EditorSidebar({ card, onChange, isLanyardMode = false }:
             <div className="flex gap-2 pt-2">
               <button
                 type="button"
-                onClick={() => setActiveGroup('template')}
+                onClick={() => handleTabChange('template')}
                 className="py-2 px-3 border border-gray-300 rounded-xl font-bold text-xs text-gray-600 hover:bg-gray-100 flex items-center gap-1"
               >
                 <ArrowLeft size={13} /> Back
               </button>
               <button
                 type="button"
-                onClick={() => setActiveGroup('creative')}
+                onClick={() => handleTabChange('creative')}
                 className="flex-1 py-2 px-4 bg-[#6A5495] text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-[#56427D] transition shadow-xs"
               >
                 <span>Next: Avatar & Signature</span>
@@ -499,6 +491,8 @@ export default function EditorSidebar({ card, onChange, isLanyardMode = false }:
                 Handwritten Signature:
               </label>
               <SignaturePad
+                key={`sig-${card.id}-${card.signatureType}`}
+                signatureType={card.signatureType}
                 signatureDataUrl={card.signatureDataUrl}
                 signatureText={card.signatureText}
                 onChange={(res) => onChange(res)}
@@ -622,7 +616,7 @@ export default function EditorSidebar({ card, onChange, isLanyardMode = false }:
             {/* Back to Info Button */}
             <button
               type="button"
-              onClick={() => setActiveGroup('identity')}
+              onClick={() => handleTabChange('identity')}
               className="w-full mt-2 py-2 px-3 border border-gray-300 rounded-xl font-bold text-xs text-gray-700 hover:bg-gray-100 flex items-center justify-center gap-1"
             >
               <ArrowLeft size={13} /> Back to Info & Colors
