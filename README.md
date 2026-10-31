@@ -1,4 +1,4 @@
-It's tudi, cute namecard 2d design.
+It's tudi, cute 2d id card design.
 
 ## Running Locally
 1. Clone this repo
