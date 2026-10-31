@@ -15,7 +15,7 @@ import { RotateCw, Scissors } from "lucide-react";
 export default function Home() {
   const { currentSlotIndex, slotsData, card } = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const [isBack, setIsBack] = useState(false);
-  const [isLanyardMode, setIsLanyardMode] = useState(true);
+  const [isLanyardMode, setIsLanyardMode] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [printLayout, setPrintLayout] = useState<"1-page" | "2-page">("1-page");
 
