@@ -258,16 +258,16 @@ export default function DriverLicenseCard({ card, isBack = false }: DriverLicens
       {/* Stamps only on FRONT side (positioned safely to never collide with text or signature) */}
       {!isBack && (
         <>
-          {/* Decorative Verified Stamp Overlay (Safe in top center between CALIFORNIA and Driver License) */}
+          {/* Decorative Verified Stamp Overlay (Safe in open right area, never touching text or headers) */}
           {card.stamps?.includes('verified') && (
-            <div className="absolute top-2.5 left-[190px] pointer-events-none rotate-[-4deg] border-2 border-[#10B981] text-[#10B981] px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
+            <div className="absolute top-14 right-5 pointer-events-none rotate-6 border-2 border-[#10B981] text-[#10B981] px-2 py-0.5 rounded-md text-[9.5px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
               ★ VERIFIED
             </div>
           )}
 
-          {/* Approved Seal Overlay (Safe in bottom center between Signature and Barcode) */}
+          {/* Approved Seal Overlay (Safe in open right area above barcode, never touching signature) */}
           {card.stamps?.includes('approved') && (
-            <div className="absolute bottom-2.5 left-[175px] pointer-events-none rotate-[-6deg] border-2 border-[#EF4444] text-[#EF4444] px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
+            <div className="absolute bottom-12 right-6 pointer-events-none rotate-[-6deg] border-2 border-[#EF4444] text-[#EF4444] px-2 py-0.5 rounded-md text-[9.5px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
               ✓ APPROVED
             </div>
           )}

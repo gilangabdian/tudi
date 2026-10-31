@@ -72,30 +72,28 @@ export default function Navbar({
             <span>{isDownloading ? 'Saving...' : 'Download PNG'}</span>
           </button>
 
-          {/* Print Dual-Sided Card with Mode Switcher */}
-          <div className="flex items-center">
+          {/* Print A4 Action Button */}
+          <button
+            type="button"
+            onClick={onPrint}
+            className="friendly-btn flex items-center gap-1.5 px-3 py-1.5 bg-white text-[#261F36] text-xs hover:bg-gray-50 shadow-xs"
+            title="Print Dual-Sided Card Sheet on A4 paper"
+          >
+            <Printer size={14} />
+            <span className="hidden sm:inline font-bold">Print A4</span>
+          </button>
+
+          {/* Print Mode Switcher (Clean spacing next to Print A4) */}
+          {onTogglePrintLayout && (
             <button
               type="button"
-              onClick={onPrint}
-              className={`friendly-btn flex items-center gap-1.5 px-3 py-1.5 bg-white text-[#261F36] text-xs hover:bg-gray-50 ${
-                onTogglePrintLayout ? 'rounded-r-none border-r-0' : ''
-              }`}
-              title="Print Dual-Sided Card Sheet on A4 paper"
+              onClick={onTogglePrintLayout}
+              className="friendly-btn flex items-center gap-1 px-2.5 py-1.5 bg-gray-50 text-[#261F36] text-[11px] font-bold hover:bg-gray-100 border border-gray-300 shadow-xs transition"
+              title={`Print Sheet Mode: ${printLayout === '1-page' ? '1-Page Foldable (Both sides on 1 sheet)' : '2-Pages Separate (Page 1 Front, Page 2 Back)'}. Click to switch.`}
             >
-              <Printer size={14} />
-              <span className="hidden sm:inline">Print A4</span>
+              <span>{printLayout === '1-page' ? '📄 1-Page' : '📑 2-Page'}</span>
             </button>
-            {onTogglePrintLayout && (
-              <button
-                type="button"
-                onClick={onTogglePrintLayout}
-                className="friendly-btn px-2 py-1.5 bg-gray-50 text-[#261F36] text-[11px] font-bold hover:bg-gray-100 rounded-l-none border-l border-gray-200"
-                title={`Print Sheet Mode: ${printLayout === '1-page' ? '1-Page Foldable (Both sides on 1 sheet)' : '2-Pages Separate (Page 1 Front, Page 2 Back)'}. Click to switch.`}
-              >
-                <span>{printLayout === '1-page' ? '📄 1-Page' : '📑 2-Page'}</span>
-              </button>
-            )}
-          </div>
+          )}
         </div>
       </div>
     </header>

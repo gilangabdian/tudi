@@ -146,16 +146,16 @@ export default function EventPassCard({ card, isBack = false }: EventPassCardPro
       {/* Stamps only on FRONT side (positioned safely beside photo without touching title or signature) */}
       {!isBack && (
         <>
-          {/* Verified Stamp Overlay (Safe beside photo on the left) */}
+          {/* Verified Stamp Overlay (Safe beside photo on the left, fully unclipped) */}
           {card.stamps?.includes('verified') && (
-            <div className="absolute top-44 left-2 -rotate-12 pointer-events-none border-2 border-[#10B981] text-[#10B981] px-2 py-0.5 rounded-md text-[10px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
+            <div className="absolute top-[176px] left-3 -rotate-6 pointer-events-none border-2 border-[#10B981] text-[#10B981] px-1.5 py-0.5 rounded-md text-[9px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
               ★ VERIFIED
             </div>
           )}
 
-          {/* Approved Seal Overlay (Safe beside photo on the right) */}
+          {/* Approved Seal Overlay (Safe beside photo on the right, fully unclipped) */}
           {card.stamps?.includes('approved') && (
-            <div className="absolute top-44 right-2 rotate-12 pointer-events-none border-2 border-[#EF4444] text-[#EF4444] px-2 py-0.5 rounded-md text-[10px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
+            <div className="absolute top-[176px] right-3 rotate-6 pointer-events-none border-2 border-[#EF4444] text-[#EF4444] px-1.5 py-0.5 rounded-md text-[9px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
               ✓ APPROVED
             </div>
           )}
