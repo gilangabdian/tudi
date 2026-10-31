@@ -491,7 +491,7 @@ export default function EditorSidebar({ card, onChange, isLanyardMode = false }:
                 Handwritten Signature:
               </label>
               <SignaturePad
-                key={`sig-${card.id}-${card.signatureType}`}
+                key={`sig-${card.id}`}
                 signatureType={card.signatureType}
                 signatureDataUrl={card.signatureDataUrl}
                 signatureText={card.signatureText}

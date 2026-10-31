@@ -22,9 +22,9 @@ export default function SignaturePad({
 }: SignaturePadProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
-  const [mode, setMode] = useState<'draw' | 'type'>(signatureType);
-  const [typedName, setTypedName] = useState(signatureText || 'Kase Y.');
-  const [lastDrawnUrl, setLastDrawnUrl] = useState<string | undefined>(signatureDataUrl);
+
+  const mode = signatureType || 'draw';
+  const typedName = signatureText || 'Kase Y.';
 
   // Restore drawing on canvas when mode is 'draw' or when signatureDataUrl changes
   useEffect(() => {
@@ -34,21 +34,22 @@ export default function SignaturePad({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    if (lastDrawnUrl) {
+    if (signatureDataUrl) {
       const img = new Image();
       img.onload = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       };
-      img.src = lastDrawnUrl;
+      img.src = signatureDataUrl;
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
-  }, [mode, lastDrawnUrl]);
+  }, [mode, signatureDataUrl]);
 
   const handleSwitchMode = (newMode: 'draw' | 'type') => {
-    setMode(newMode);
     onChange({
       signatureType: newMode,
-      signatureDataUrl: lastDrawnUrl,
+      signatureDataUrl,
       signatureText: typedName,
     });
   };
@@ -97,7 +98,6 @@ export default function SignaturePad({
     const canvas = canvasRef.current;
     if (!canvas) return;
     const dataUrl = canvas.toDataURL('image/png');
-    setLastDrawnUrl(dataUrl);
     onChange({
       signatureType: 'draw',
       signatureDataUrl: dataUrl,
@@ -111,7 +111,6 @@ export default function SignaturePad({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    setLastDrawnUrl(undefined);
     onChange({
       signatureType: 'draw',
       signatureDataUrl: undefined,
@@ -120,10 +119,9 @@ export default function SignaturePad({
   };
 
   const handleTypeChange = (val: string) => {
-    setTypedName(val);
     onChange({
       signatureType: 'type',
-      signatureDataUrl: lastDrawnUrl,
+      signatureDataUrl,
       signatureText: val,
     });
   };

@@ -4,6 +4,7 @@ import { DEFAULT_CARD_DATA } from './constants';
 export const STORAGE_SLOTS_KEY = 'tudi_10_slots_v3';
 export const STORAGE_ACTIVE_SLOT_KEY = 'tudi_active_slot_index_v3';
 export const COOKIE_CARD_META_KEY = 'tudi_active_card_meta';
+export const COOKIE_SIG_KEY = 'tudi_active_sig';
 
 export interface CardStoreState {
   currentSlotIndex: number;
@@ -45,7 +46,7 @@ export function parseCardMetaCookie(cookieVal?: string): CardData {
 export function saveCardMetaToCookie(card: CardData, slotIndex: number) {
   if (typeof document === 'undefined') return;
   try {
-    // Exclude large base64 image & signature blobs to keep cookie lightweight and safe under 4KB
+    // Exclude large base64 image & signature blobs from main meta cookie to keep it lightweight and safe under 4KB
     const meta: CardMetaDraft = {
       ...card,
       photoUrl: '',
@@ -55,6 +56,13 @@ export function saveCardMetaToCookie(card: CardData, slotIndex: number) {
 
     const val = encodeURIComponent(JSON.stringify(meta));
     document.cookie = `${COOKIE_CARD_META_KEY}=${val}; path=/; max-age=31536000; SameSite=Lax`;
+
+    // Persist drawn signature data in a dedicated cookie if present and under safe cookie size
+    if (card.signatureType !== 'type' && card.signatureDataUrl && card.signatureDataUrl.length < 3500) {
+      document.cookie = `${COOKIE_SIG_KEY}=${encodeURIComponent(card.signatureDataUrl)}; path=/; max-age=31536000; SameSite=Lax`;
+    } else {
+      document.cookie = `${COOKIE_SIG_KEY}=; path=/; max-age=0; SameSite=Lax`;
+    }
   } catch (e) {
     console.warn('Cookie save error:', e);
   }
