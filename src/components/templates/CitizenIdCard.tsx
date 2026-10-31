@@ -143,17 +143,17 @@ export default function CitizenIdCard({ card, isBack = false }: CitizenIdCardPro
 
               {/* Signature */}
               <div className="w-[115px] h-[34px] mt-1 border-b border-[#261F36]/40 flex items-center justify-center">
-                {card.signatureType !== 'type' && card.signatureDataUrl ? (
+                {card.signatureType === 'type' ? (
+                  <span className="font-['Caveat'] text-xl font-bold leading-none text-[#261F36]">
+                    {card.signatureText || `${card.firstName || 'Citizen'}`}
+                  </span>
+                ) : card.signatureDataUrl ? (
                   <img
                     src={card.signatureDataUrl}
                     alt="Signature"
                     className="max-h-[30px] max-w-full object-contain"
                   />
-                ) : (
-                  <span className="font-['Caveat'] text-xl font-bold leading-none text-[#261F36]">
-                    {card.signatureText || `${card.firstName || 'Citizen'}`}
-                  </span>
-                )}
+                ) : null}
               </div>
             </div>
           </div>

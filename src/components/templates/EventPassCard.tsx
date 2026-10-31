@@ -93,13 +93,13 @@ export default function EventPassCard({ card, isBack = false }: EventPassCardPro
 
             {/* Signature */}
             <div className="w-[110px] mx-auto h-[22px] flex items-center justify-center border-b border-[#261F36]/30">
-              {card.signatureType !== 'type' && card.signatureDataUrl ? (
-                <img src={card.signatureDataUrl} alt="Signature" className="max-h-[20px] max-w-full object-contain" />
-              ) : (
+              {card.signatureType === 'type' ? (
                 <span className="font-['Caveat'] text-lg font-bold leading-none text-[#261F36]">
                   {card.signatureText || `${card.firstName || 'Guest'}`}
                 </span>
-              )}
+              ) : card.signatureDataUrl ? (
+                <img src={card.signatureDataUrl} alt="Signature" className="max-h-[20px] max-w-full object-contain" />
+              ) : null}
             </div>
           </div>
 

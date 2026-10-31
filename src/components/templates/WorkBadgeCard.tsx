@@ -13,8 +13,6 @@ export default function WorkBadgeCard({ card, isBack = false }: WorkBadgeCardPro
   const currentAvatar =
     PRESET_AVATARS.find((a) => a.id === card.photoPresetId) || PRESET_AVATARS[0];
 
-  const showDrawnSignature = card.signatureType !== 'type' && Boolean(card.signatureDataUrl);
-
   return (
     <div
       className={`relative w-[320px] h-[480px] rounded-2xl border-2 border-[#334155] shadow-xs p-5 select-none overflow-hidden transition-all duration-300 font-['Patrick_Hand'] flex flex-col justify-between ${
@@ -89,13 +87,13 @@ export default function WorkBadgeCard({ card, isBack = false }: WorkBadgeCardPro
 
             {/* Signature */}
             <div className="w-[120px] mx-auto h-[24px] flex items-center justify-center border-b border-[#334155]/30">
-              {showDrawnSignature ? (
-                <img src={card.signatureDataUrl} alt="Signature" className="max-h-[22px] max-w-full object-contain" />
-              ) : (
+              {card.signatureType === 'type' ? (
                 <span className="font-['Caveat'] text-lg font-bold leading-none text-[#2D3748]">
                   {card.signatureText || `${card.firstName}`}
                 </span>
-              )}
+              ) : card.signatureDataUrl ? (
+                <img src={card.signatureDataUrl} alt="Signature" className="max-h-[22px] max-w-full object-contain" />
+              ) : null}
             </div>
           </div>
 

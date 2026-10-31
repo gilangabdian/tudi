@@ -13,8 +13,6 @@ export default function DriverLicenseCard({ card, isBack = false }: DriverLicens
   const currentAvatar =
     PRESET_AVATARS.find((a) => a.id === card.photoPresetId) || PRESET_AVATARS[0];
 
-  const showDrawnSignature = card.signatureType !== 'type' && Boolean(card.signatureDataUrl);
-
   return (
     <div
       className={`relative w-[500px] h-[315px] rounded-2xl border-2 border-[#334155] shadow-xs p-5 select-none overflow-hidden transition-all duration-300 font-['Patrick_Hand'] ${
@@ -156,17 +154,17 @@ export default function DriverLicenseCard({ card, isBack = false }: DriverLicens
           <div className="flex items-end justify-between pt-1 border-t border-[#334155]/20">
             {/* Signature Area */}
             <div className="w-[140px] h-[36px] flex items-center justify-start border-b border-[#334155]/40">
-              {showDrawnSignature ? (
+              {card.signatureType === 'type' ? (
+                <span className="font-['Caveat'] text-2xl font-bold leading-none text-[#1E293B]">
+                  {card.signatureText || 'Grizzly Bear'}
+                </span>
+              ) : card.signatureDataUrl ? (
                 <img
                   src={card.signatureDataUrl}
                   alt="Signature"
                   className="max-h-[34px] max-w-full object-contain"
                 />
-              ) : (
-                <span className="font-['Caveat'] text-2xl font-bold leading-none text-[#1E293B]">
-                  {card.signatureText || 'Grizzly Bear'}
-                </span>
-              )}
+              ) : null}
             </div>
 
             {/* Doodle Barcode */}

@@ -97,7 +97,8 @@ export default function SignaturePad({
     setIsDrawing(false);
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const dataUrl = canvas.toDataURL('image/png');
+    // Export compact webp or fallback png to ensure high performance and light cookie persistence
+    const dataUrl = canvas.toDataURL('image/webp', 0.8) || canvas.toDataURL('image/png');
     onChange({
       signatureType: 'draw',
       signatureDataUrl: dataUrl,

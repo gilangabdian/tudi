@@ -13,8 +13,6 @@ export default function PopBadgeCard({ card, isBack = false }: PopBadgeCardProps
   const currentAvatar =
     PRESET_AVATARS.find((a) => a.id === card.photoPresetId) || PRESET_AVATARS[0];
 
-  const showDrawnSignature = card.signatureType !== 'type' && Boolean(card.signatureDataUrl);
-
   return (
     <div
       className={`relative w-[480px] h-[320px] rounded-[22px] border-[2.5px] border-[#334155] shadow-xs select-none overflow-hidden transition-all duration-300 font-['Fredoka'] ${
@@ -146,17 +144,17 @@ export default function PopBadgeCard({ card, isBack = false }: PopBadgeCardProps
 
                 {/* Handwritten or Typed Signature */}
                 <div className="w-[110px] h-[28px] flex items-center justify-center border-b border-[#334155]/40">
-                  {showDrawnSignature ? (
+                  {card.signatureType === 'type' ? (
+                    <span className="font-['Caveat'] text-xl font-bold leading-none text-[#1E293B]">
+                      {card.signatureText || `${card.firstName}`}
+                    </span>
+                  ) : card.signatureDataUrl ? (
                     <img
                       src={card.signatureDataUrl}
                       alt="Signature"
                       className="max-h-[26px] max-w-full object-contain"
                     />
-                  ) : (
-                    <span className="font-['Caveat'] text-xl font-bold leading-none text-[#1E293B]">
-                      {card.signatureText || `${card.firstName}`}
-                    </span>
-                  )}
+                  ) : null}
                 </div>
               </div>
             </div>
