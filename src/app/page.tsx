@@ -155,7 +155,7 @@ export default function Home() {
             {/* Minimal Header */}
             <div
               className="flex items-center justify-between border-b border-gray-300 pb-1 mb-3 text-left"
-              style={{ width: isPortraitTemplate ? "520px" : "416px" }}>
+              style={{ width: isPortraitTemplate ? "560px" : "430px" }}>
               <div className="flex items-center gap-1.5">
                 <span className="font-['Fredoka'] font-black text-sm text-[#261F36]">tudi</span>
                 <span className="text-[10px] font-bold text-gray-500 font-['Space_Mono']">
@@ -166,45 +166,48 @@ export default function Home() {
             </div>
 
             {isPortraitTemplate ? (
-              /* PORTRAIT TEMPLATES (Event Pass, Work Badge, Pop Badge): SIDE-BY-SIDE WITH VERTICAL FOLD LINE */
+              /* PORTRAIT TEMPLATES (Event Pass, Work Badge): SIDE-BY-SIDE WITH VERTICAL FOLD LINE */
               <div
-                className="border-2 border-dashed border-gray-400 rounded-2xl p-4 bg-white flex flex-col items-center shadow-xs"
-                style={{ width: "540px" }}
+                className="border-2 border-dashed border-gray-400 rounded-2xl p-5 bg-white flex flex-col items-center shadow-xs"
+                style={{ width: "560px" }}
               >
                 {/* Side Labels Header */}
-                <div className="w-full flex items-center justify-between px-2 mb-2 text-gray-500 font-['Space_Mono'] text-[10px] font-bold tracking-widest uppercase">
-                  <span>▲ FRONT SIDE</span>
-                  <span>▲ BACK SIDE</span>
+                <div className="w-full flex items-center justify-between mb-3 text-gray-500 font-['Space_Mono'] text-[10px] font-bold tracking-widest uppercase">
+                  <span className="w-[230px] text-center">▲ FRONT SIDE</span>
+                  <span className="w-8 shrink-0" />
+                  <span className="w-[230px] text-center">▲ BACK SIDE</span>
                 </div>
 
-                {/* Cards Container Side-by-Side (Unclipped, Crisp 2D Borders) */}
-                <div className="flex items-center justify-between w-full">
+                {/* Cards Container Side-by-Side (Unclipped, Crisp 2D Borders, 100% within dashed guide) */}
+                <div className="flex items-center justify-center gap-3 w-full">
                   {/* Front Card Container */}
-                  <div className="relative w-[240px] h-[360px] shrink-0">
+                  <div className="relative w-[230px] h-[345px] shrink-0">
                     <div
                       className="absolute top-0 left-0 w-[320px] h-[480px] origin-top-left"
-                      style={{ transform: "scale(0.75)" }}
+                      style={{ transform: "scale(0.71875)" }}
                     >
                       <CardRenderer card={card} isBack={false} />
                     </div>
                   </div>
 
                   {/* Vertical Fold / Cut Line with Scissors */}
-                  <div className="flex flex-col items-center justify-between h-[360px] px-3 text-gray-400">
-                    <Scissors size={12} className="text-gray-400 rotate-90" />
+                  <div className="w-8 flex flex-col items-center justify-between h-[345px] text-gray-400 shrink-0">
+                    <Scissors size={12} className="text-gray-400 rotate-90 shrink-0" />
                     <div className="flex-1 w-0 border-r border-dashed border-gray-300 my-1" />
-                    <span className="text-[7.5px] font-['Space_Mono'] uppercase font-bold tracking-widest text-gray-400 rotate-90 my-3 whitespace-nowrap">
-                      FOLD OR CUT
-                    </span>
+                    <div className="w-4 h-20 flex items-center justify-center shrink-0">
+                      <span className="text-[7.5px] font-['Space_Mono'] uppercase font-bold tracking-widest text-gray-400 -rotate-90 whitespace-nowrap select-none">
+                        FOLD OR CUT
+                      </span>
+                    </div>
                     <div className="flex-1 w-0 border-r border-dashed border-gray-300 my-1" />
-                    <Scissors size={12} className="text-gray-400 -rotate-90" />
+                    <Scissors size={12} className="text-gray-400 -rotate-90 shrink-0" />
                   </div>
 
                   {/* Back Card Container */}
-                  <div className="relative w-[240px] h-[360px] shrink-0">
+                  <div className="relative w-[230px] h-[345px] shrink-0">
                     <div
                       className="absolute top-0 left-0 w-[320px] h-[480px] origin-top-left"
-                      style={{ transform: "scale(0.75)" }}
+                      style={{ transform: "scale(0.71875)" }}
                     >
                       <CardRenderer card={card} isBack={true} />
                     </div>
@@ -214,11 +217,11 @@ export default function Home() {
             ) : (
               /* LANDSCAPE TEMPLATES (Citizen ID, Driver License): TOP-AND-BOTTOM WITH HORIZONTAL FOLD LINE */
               <div
-                className="border-2 border-dashed border-gray-400 rounded-2xl p-4 bg-white flex flex-col items-center shadow-xs"
-                style={{ width: "420px" }}
+                className="border-2 border-dashed border-gray-400 rounded-2xl p-5 bg-white flex flex-col items-center shadow-xs"
+                style={{ width: "430px" }}
               >
                 {/* Front Side Label */}
-                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 font-['Space_Mono'] self-start">
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 font-['Space_Mono'] text-center w-[380px]">
                   ▲ FRONT SIDE
                 </span>
 
@@ -234,17 +237,17 @@ export default function Home() {
 
                 {/* Center Horizontal Fold / Cut Line */}
                 <div className="w-[380px] my-3 flex items-center justify-center gap-2 text-gray-400">
-                  <Scissors size={11} className="text-gray-400" />
+                  <Scissors size={11} className="text-gray-400 shrink-0" />
                   <div className="flex-1 border-b border-dashed border-gray-300" />
-                  <span className="text-[8px] font-['Space_Mono'] uppercase font-bold tracking-widest px-2.5 py-0.5 bg-gray-100 rounded-full text-gray-500 border border-gray-200 flex items-center gap-1">
+                  <span className="text-[8px] font-['Space_Mono'] uppercase font-bold tracking-widest px-2.5 py-0.5 bg-gray-100 rounded-full text-gray-500 border border-gray-200 flex items-center gap-1 shrink-0 select-none">
                     FOLD OR CUT LINE
                   </span>
                   <div className="flex-1 border-b border-dashed border-gray-300" />
-                  <Scissors size={11} className="text-gray-400 rotate-180" />
+                  <Scissors size={11} className="text-gray-400 rotate-180 shrink-0" />
                 </div>
 
                 {/* Back Side Label */}
-                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 font-['Space_Mono'] self-start">
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 font-['Space_Mono'] text-center w-[380px]">
                   ▲ BACK SIDE
                 </span>
 
