@@ -255,31 +255,36 @@ export default function DriverLicenseCard({ card, isBack = false }: DriverLicens
         </div>
       )}
 
-      {/* Decorative Stamps Overlay */}
-      {card.stamps?.includes('verified') && (
-        <div className="absolute top-3 right-4 pointer-events-none rotate-12 border-2 border-[#10B981] text-[#10B981] px-2.5 py-0.5 rounded-md text-[11px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
-          ★ VERIFIED
-        </div>
-      )}
+      {/* Stamps only on FRONT side (positioned safely to never collide with text or signature) */}
+      {!isBack && (
+        <>
+          {/* Decorative Verified Stamp Overlay (Safe in top center between CALIFORNIA and Driver License) */}
+          {card.stamps?.includes('verified') && (
+            <div className="absolute top-2.5 left-[190px] pointer-events-none rotate-[-4deg] border-2 border-[#10B981] text-[#10B981] px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
+              ★ VERIFIED
+            </div>
+          )}
 
-      {/* Approved Seal Overlay */}
-      {card.stamps?.includes('approved') && (
-        <div className="absolute bottom-12 left-4 pointer-events-none rotate-[-8deg] border-2 border-[#EF4444] text-[#EF4444] px-2.5 py-0.5 rounded-md text-[11px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
-          ✓ APPROVED
-        </div>
-      )}
+          {/* Approved Seal Overlay (Safe in bottom center between Signature and Barcode) */}
+          {card.stamps?.includes('approved') && (
+            <div className="absolute bottom-2.5 left-[175px] pointer-events-none rotate-[-6deg] border-2 border-[#EF4444] text-[#EF4444] px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
+              ✓ APPROVED
+            </div>
+          )}
 
-      {/* 2D Grizzly Bear Paw Watermark */}
-      {card.stamps?.includes('pawprint') && (
-        <div className="absolute bottom-10 right-28 pointer-events-none rotate-[-15deg] opacity-50 z-10">
-          <svg viewBox="0 0 60 70" className="w-10 h-12 fill-[#8B5A2B]">
-            <ellipse cx="30" cy="46" rx="14" ry="17" />
-            <circle cx="16" cy="22" r="5" />
-            <circle cx="26" cy="15" r="5" />
-            <circle cx="36" cy="15" r="5" />
-            <circle cx="45" cy="22" r="5" />
-          </svg>
-        </div>
+          {/* 2D Grizzly Bear Paw Watermark (Faint background watermark) */}
+          {card.stamps?.includes('pawprint') && (
+            <div className="absolute bottom-9 right-28 pointer-events-none rotate-[-15deg] opacity-20 z-10">
+              <svg viewBox="0 0 60 70" className="w-10 h-12 fill-[#8B5A2B]">
+                <ellipse cx="30" cy="46" rx="14" ry="17" />
+                <circle cx="16" cy="22" r="5" />
+                <circle cx="26" cy="15" r="5" />
+                <circle cx="36" cy="15" r="5" />
+                <circle cx="45" cy="22" r="4.5" />
+              </svg>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

@@ -27,6 +27,7 @@ export default function Home() {
   const [isBack, setIsBack] = useState(false);
   const [isLanyardMode, setIsLanyardMode] = useState(true);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [printLayout, setPrintLayout] = useState<'1-page' | '2-page'>('1-page');
 
   const cardRef = useRef<HTMLDivElement | null>(null);
   const exportCardRef = useRef<HTMLDivElement | null>(null);
@@ -89,6 +90,10 @@ export default function Home() {
         onDownloadPNG={handleDownloadPNG}
         onPrint={handlePrint}
         isDownloading={isDownloading}
+        printLayout={printLayout}
+        onTogglePrintLayout={() =>
+          setPrintLayout((prev) => (prev === '1-page' ? '2-page' : '1-page'))
+        }
       />
 
       {/* Save Slots Rail (Fading 1-4, 5-10 reveal on hover) */}
@@ -146,7 +151,7 @@ export default function Home() {
               <span>{isBack ? 'Flip to Front Side' : 'Flip to Back Side'}</span>
             </button>
 
-            {/* Preview with Lanyard Toggle Button (relocated from header) */}
+            {/* Preview with Lanyard Toggle Button */}
             <button
               type="button"
               onClick={() => setIsLanyardMode(!isLanyardMode)}
@@ -176,50 +181,190 @@ export default function Home() {
       {/* DEDICATED DUAL-SIDED PRINT SHEET (Only Visible When Printing) */}
       <section
         id="printable-dual-card-sheet"
-        className="hidden print:block p-6 bg-white text-center font-['Fredoka']"
+        className="hidden print:block p-2 bg-white text-center font-['Fredoka']"
       >
-        <div className={`max-w-2xl mx-auto space-y-3 ${isPortraitTemplate ? 'print:scale-[0.88] print:origin-top' : ''}`}>
-          <div className="border-b-2 border-gray-300 pb-2 text-left">
-            <h2 className="text-lg font-black text-[#261F36] flex items-center gap-2">
-              <Scissors size={18} /> tudi • Printable Dual-Sided Card Sheet
-            </h2>
-            <p className="text-xs text-gray-600 mt-0.5 font-['Patrick_Hand']">
-              Standard CR80 Size (85.6mm × 54mm). Cut along the border guide, fold along the center line, and insert into your wallet or badge sleeve!
+        {printLayout === '1-page' ? (
+          /* MODE 1: 1-PAGE DUAL-SIDED FOLDABLE BADGE SHEET (Crisp, spacious, perfectly unclipped) */
+          <div className="flex flex-col items-center justify-center py-4">
+            {/* Minimal Header */}
+            <div
+              className="flex items-center justify-between border-b border-gray-300 pb-1 mb-3 text-left"
+              style={{ width: isPortraitTemplate ? '520px' : '416px' }}
+            >
+              <div className="flex items-center gap-1.5">
+                <span className="font-['Fredoka'] font-black text-sm text-[#261F36]">tudi</span>
+                <span className="text-[10px] font-bold text-gray-500 font-['Space_Mono']">• Double-Sided Printable Sheet</span>
+              </div>
+              <span className="text-[9px] text-gray-400 font-['Space_Mono']">
+                CR80 Wallet Size (85.6 × 54 mm)
+              </span>
+            </div>
+
+            {isPortraitTemplate ? (
+              /* PORTRAIT TEMPLATES (Event Pass, Work Badge, Pop Badge): SIDE-BY-SIDE WITH VERTICAL FOLD LINE */
+              <div
+                className="border-2 border-dashed border-gray-400 rounded-2xl p-3 bg-white flex flex-col items-center shadow-xs"
+                style={{ width: '520px' }}
+              >
+                {/* Side Labels Header */}
+                <div className="w-full flex items-center justify-between px-2 mb-2 text-gray-400 font-['Space_Mono'] text-[9.5px] font-bold tracking-widest uppercase">
+                  <span>▲ FRONT SIDE</span>
+                  <span>▲ BACK SIDE</span>
+                </div>
+
+                {/* Cards Container Side-by-Side */}
+                <div className="flex items-center justify-between w-full">
+                  {/* Front Card Container */}
+                  <div
+                    className="overflow-hidden rounded-2xl relative shadow-xs border border-gray-200"
+                    style={{ width: '232px', height: '348px' }}
+                  >
+                    <div
+                      style={{
+                        width: '320px',
+                        height: '480px',
+                        transform: 'scale(0.725)',
+                        transformOrigin: 'top left',
+                      }}
+                    >
+                      <CardRenderer card={card} isBack={false} />
+                    </div>
+                  </div>
+
+                  {/* Vertical Fold / Cut Line with Scissors */}
+                  <div className="flex flex-col items-center justify-between h-[348px] px-2 text-gray-400">
+                    <Scissors size={12} className="text-gray-400 rotate-90" />
+                    <div className="flex-1 w-0 border-r border-dashed border-gray-300 my-1" />
+                    <span className="text-[7.5px] font-['Space_Mono'] uppercase font-bold tracking-widest text-gray-400 rotate-90 my-3 whitespace-nowrap">
+                      FOLD OR CUT
+                    </span>
+                    <div className="flex-1 w-0 border-r border-dashed border-gray-300 my-1" />
+                    <Scissors size={12} className="text-gray-400 -rotate-90" />
+                  </div>
+
+                  {/* Back Card Container */}
+                  <div
+                    className="overflow-hidden rounded-2xl relative shadow-xs border border-gray-200"
+                    style={{ width: '232px', height: '348px' }}
+                  >
+                    <div
+                      style={{
+                        width: '320px',
+                        height: '480px',
+                        transform: 'scale(0.725)',
+                        transformOrigin: 'top left',
+                      }}
+                    >
+                      <CardRenderer card={card} isBack={true} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* LANDSCAPE TEMPLATES (Citizen ID, Driver License): TOP-AND-BOTTOM WITH HORIZONTAL FOLD LINE */
+              <div
+                className="border-2 border-dashed border-gray-400 rounded-2xl p-3 bg-white flex flex-col items-center shadow-xs"
+                style={{ width: '416px' }}
+              >
+                {/* Front Side Label */}
+                <span className="text-[9.5px] font-bold text-gray-400 uppercase tracking-widest mb-1.5 font-['Space_Mono'] self-start">
+                  ▲ FRONT SIDE
+                </span>
+
+                {/* Front Card Container */}
+                <div
+                  className="overflow-hidden rounded-2xl relative shadow-xs border border-gray-200"
+                  style={{ width: '380px', height: '240px' }}
+                >
+                  <div
+                    style={{
+                      width: '500px',
+                      height: '315px',
+                      transform: 'scale(0.76)',
+                      transformOrigin: 'top left',
+                    }}
+                  >
+                    <CardRenderer card={card} isBack={false} />
+                  </div>
+                </div>
+
+                {/* Center Horizontal Fold / Cut Line */}
+                <div className="w-full my-3 flex items-center justify-center gap-2 text-gray-400">
+                  <Scissors size={11} className="text-gray-400" />
+                  <div className="flex-1 border-b border-dashed border-gray-300" />
+                  <span className="text-[8px] font-['Space_Mono'] uppercase font-bold tracking-widest px-2.5 py-0.5 bg-gray-100 rounded-full text-gray-500 border border-gray-200 flex items-center gap-1">
+                    FOLD OR CUT LINE
+                  </span>
+                  <div className="flex-1 border-b border-dashed border-gray-300" />
+                  <Scissors size={11} className="text-gray-400 rotate-180" />
+                </div>
+
+                {/* Back Side Label */}
+                <span className="text-[9.5px] font-bold text-gray-400 uppercase tracking-widest mb-1.5 font-['Space_Mono'] self-start">
+                  ▲ BACK SIDE
+                </span>
+
+                {/* Back Card Container */}
+                <div
+                  className="overflow-hidden rounded-2xl relative shadow-xs border border-gray-200"
+                  style={{ width: '380px', height: '240px' }}
+                >
+                  <div
+                    style={{
+                      width: '500px',
+                      height: '315px',
+                      transform: 'scale(0.76)',
+                      transformOrigin: 'top left',
+                    }}
+                  >
+                    <CardRenderer card={card} isBack={true} />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Instruction Tip */}
+            <p className="text-[9.5px] text-gray-500 font-['Space_Mono'] mt-3 text-center">
+              ✂ Cut along the outer dashed guide • Fold along the center line to fit into your badge sleeve or wallet
             </p>
           </div>
-
-          {/* Dual Card Layout Container (Strictly Vertical Stack - Atas Bawah) */}
-          <div className="flex flex-col items-center justify-center gap-3 p-4 border-2 border-dashed border-gray-400 rounded-2xl bg-white">
-            {/* Front Side */}
-            <div className="flex flex-col items-center">
-              <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1.5 font-['Space_Mono']">
-                ▲ FRONT SIDE
-              </span>
-              <div className="border border-gray-300 rounded-2xl overflow-hidden p-0.5">
+        ) : (
+          /* MODE 2: 2-PAGES SEPARATE PRINT (Page 1 = Front, Page 2 = Back at Full Size) */
+          <div className="w-full">
+            {/* Sheet 1: Front */}
+            <div className="flex flex-col items-center justify-center min-h-[90vh] py-6 text-center">
+              <div className="border-b border-gray-300 pb-2 mb-6 w-full max-w-md text-center">
+                <h2 className="text-base font-black text-[#261F36] font-['Fredoka']">
+                  tudi • Card Print (Sheet 1 of 2: Front Side)
+                </h2>
+                <span className="text-xs text-gray-500 font-['Space_Mono']">
+                  Standard CR80 Size • Full Scale 100%
+                </span>
+              </div>
+              <div className="border border-gray-300 rounded-2xl overflow-hidden p-0.5 shadow-xs">
                 <CardRenderer card={card} isBack={false} />
               </div>
             </div>
 
-            {/* Horizontal Fold Line Guide */}
-            <div className="w-full max-w-lg flex items-center justify-center gap-2 text-gray-400 py-1">
-              <div className="flex-1 h-[1px] border-b-2 border-dashed border-gray-400" />
-              <span className="text-[9px] font-['Space_Mono'] uppercase font-bold tracking-widest px-2 flex items-center gap-1.5 whitespace-nowrap">
-                <Scissors size={11} /> FOLD LINE (FOLD HERE AFTER CUTTING)
-              </span>
-              <div className="flex-1 h-[1px] border-b-2 border-dashed border-gray-400" />
-            </div>
+            {/* Page Break */}
+            <div className="print-page-break" />
 
-            {/* Back Side */}
-            <div className="flex flex-col items-center">
-              <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1.5 font-['Space_Mono']">
-                ▲ BACK SIDE
-              </span>
-              <div className="border border-gray-300 rounded-2xl overflow-hidden p-0.5">
+            {/* Sheet 2: Back */}
+            <div className="flex flex-col items-center justify-center min-h-[90vh] py-6 text-center">
+              <div className="border-b border-gray-300 pb-2 mb-6 w-full max-w-md text-center">
+                <h2 className="text-base font-black text-[#261F36] font-['Fredoka']">
+                  tudi • Card Print (Sheet 2 of 2: Back Side)
+                </h2>
+                <span className="text-xs text-gray-500 font-['Space_Mono']">
+                  Standard CR80 Size • Full Scale 100%
+                </span>
+              </div>
+              <div className="border border-gray-300 rounded-2xl overflow-hidden p-0.5 shadow-xs">
                 <CardRenderer card={card} isBack={true} />
               </div>
             </div>
           </div>
-        </div>
+        )}
       </section>
 
       {/* Footer requested by user */}

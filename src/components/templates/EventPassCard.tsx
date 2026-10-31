@@ -143,31 +143,36 @@ export default function EventPassCard({ card, isBack = false }: EventPassCardPro
         </div>
       )}
 
-      {/* Verified Stamp Overlay */}
-      {card.stamps?.includes('verified') && (
-        <div className="absolute top-6 left-4 -rotate-12 pointer-events-none border-2 border-[#10B981] text-[#10B981] px-2.5 py-0.5 rounded-md text-[11px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
-          ★ VERIFIED
-        </div>
-      )}
+      {/* Stamps only on FRONT side (positioned safely beside photo without touching title or signature) */}
+      {!isBack && (
+        <>
+          {/* Verified Stamp Overlay (Safe beside photo on the left) */}
+          {card.stamps?.includes('verified') && (
+            <div className="absolute top-44 left-2 -rotate-12 pointer-events-none border-2 border-[#10B981] text-[#10B981] px-2 py-0.5 rounded-md text-[10px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
+              ★ VERIFIED
+            </div>
+          )}
 
-      {/* Approved Seal Overlay */}
-      {card.stamps?.includes('approved') && (
-        <div className="absolute bottom-16 right-4 rotate-10 pointer-events-none border-2 border-[#EF4444] text-[#EF4444] px-2.5 py-0.5 rounded-md text-[11px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
-          ✓ APPROVED
-        </div>
-      )}
+          {/* Approved Seal Overlay (Safe beside photo on the right) */}
+          {card.stamps?.includes('approved') && (
+            <div className="absolute top-44 right-2 rotate-12 pointer-events-none border-2 border-[#EF4444] text-[#EF4444] px-2 py-0.5 rounded-md text-[10px] font-black uppercase font-['Fredoka'] tracking-wider bg-white/95 shadow-xs z-30">
+              ✓ APPROVED
+            </div>
+          )}
 
-      {/* 2D Festival Lucky Paw Watermark */}
-      {card.stamps?.includes('pawprint') && (
-        <div className="absolute bottom-32 left-6 rotate-[-15deg] pointer-events-none opacity-30 z-10">
-          <svg viewBox="0 0 60 60" className="w-14 h-14" style={{ fill: card.themeColor || '#F59E0B' }}>
-            <path d="M 30,28 C 22,28 17,33 18,43 C 19,51 25,54 30,54 C 35,54 41,51 42,43 C 43,33 38,28 30,28 Z" />
-            <circle cx="15" cy="22" r="4.5" />
-            <circle cx="25" cy="14" r="5" />
-            <circle cx="35" cy="14" r="5" />
-            <circle cx="45" cy="22" r="4.5" />
-          </svg>
-        </div>
+          {/* 2D Festival Lucky Paw Watermark (Faint background watermark) */}
+          {card.stamps?.includes('pawprint') && (
+            <div className="absolute bottom-24 left-6 rotate-[-15deg] pointer-events-none opacity-15 z-10">
+              <svg viewBox="0 0 60 60" className="w-13 h-13" style={{ fill: card.themeColor || '#F59E0B' }}>
+                <path d="M 30,28 C 22,28 17,33 18,43 C 19,51 25,54 30,54 C 35,54 41,51 42,43 C 43,33 38,28 30,28 Z" />
+                <circle cx="15" cy="22" r="4.5" />
+                <circle cx="25" cy="14" r="5" />
+                <circle cx="35" cy="14" r="5" />
+                <circle cx="45" cy="22" r="4.5" />
+              </svg>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
