@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CardData, TemplateType } from '@/types/card';
 import { COLOR_PRESETS, HOLDER_PRESETS, BG_PRESETS } from '@/lib/constants';
 import PhotoUploader from './PhotoUploader';
@@ -22,8 +22,32 @@ interface EditorSidebarProps {
 
 type GroupTab = 'template' | 'identity' | 'creative';
 
+const STORAGE_ACTIVE_TAB_KEY = 'tudi_active_tab_group';
+
 export default function EditorSidebar({ card, onChange, isLanyardMode = false }: EditorSidebarProps) {
-  const [activeGroup, setActiveGroup] = useState<GroupTab>('identity');
+  // Default to 'template' for new users (if no previous tab is saved)
+  const [activeGroup, setActiveGroup] = useState<GroupTab>('template');
+
+  // Restore user's last visited tab from localStorage upon mount
+  useEffect(() => {
+    try {
+      const savedTab = localStorage.getItem(STORAGE_ACTIVE_TAB_KEY) as GroupTab | null;
+      if (savedTab === 'template' || savedTab === 'identity' || savedTab === 'creative') {
+        setActiveGroup(savedTab);
+      }
+    } catch (e) {
+      console.warn('Failed to load active tab from localStorage:', e);
+    }
+  }, []);
+
+  const handleTabChange = (tab: GroupTab) => {
+    setActiveGroup(tab);
+    try {
+      localStorage.setItem(STORAGE_ACTIVE_TAB_KEY, tab);
+    } catch (e) {
+      console.warn('Failed to save active tab to localStorage:', e);
+    }
+  };
 
   const templates: { id: TemplateType; title: string; desc: string; icon: string }[] = [
     {
@@ -64,7 +88,7 @@ export default function EditorSidebar({ card, onChange, isLanyardMode = false }:
       <div className="flex border-b border-gray-200 pb-2 gap-2 select-none">
         <button
           type="button"
-          onClick={() => setActiveGroup('template')}
+          onClick={() => handleTabChange('template')}
           className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs font-bold transition ${
             activeGroup === 'template'
               ? 'bg-[#6A5495] text-white shadow-xs'
@@ -77,7 +101,7 @@ export default function EditorSidebar({ card, onChange, isLanyardMode = false }:
 
         <button
           type="button"
-          onClick={() => setActiveGroup('identity')}
+          onClick={() => handleTabChange('identity')}
           className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs font-bold transition ${
             activeGroup === 'identity'
               ? 'bg-[#6A5495] text-white shadow-xs'
@@ -90,7 +114,7 @@ export default function EditorSidebar({ card, onChange, isLanyardMode = false }:
 
         <button
           type="button"
-          onClick={() => setActiveGroup('creative')}
+          onClick={() => handleTabChange('creative')}
           className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs font-bold transition ${
             activeGroup === 'creative'
               ? 'bg-[#6A5495] text-white shadow-xs'
